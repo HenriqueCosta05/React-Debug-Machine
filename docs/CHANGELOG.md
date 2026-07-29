@@ -7,9 +7,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
-Nenhuma mudança de produto ainda. Projeto reiniciado do zero. Este arquivo
-passa a receber entradas quando o primeiro adapter (`shared`) for
-implementado.
+### Added
+
+- `shared`: event bus real (`createEventBus()` com `publish`/`subscribe`/`subscribeAll`), substituindo o stub `EventBusEvents`/`EventBus`.
+- `shared`: `DebugEvent.data` tipado como union discriminada por `type`, começando por `DomEventData`/`DomTargetDescriptor`; demais domínios seguem `unknown` até seus adapters existirem.
+- `shared`: validação de schema em runtime no ponto de `publish()` — evento inválido é reportado (`console.error`) e descartado, nunca lança.
+- infra: workspace `pnpm` (`pnpm-workspace.yaml` + `package.json` raiz) em `application/`, pré-requisito pra linkar pacotes via `workspace:*`.
+- `shared`: suíte de testes com Rstest cobrindo `createEventBus` e validação de schema.
 
 > Nota histórica: uma versão anterior deste projeto (`@henriquecosta/react-debugmachine`,
 > "React Time Machine", recorder/player de DOM e rede) chegou a publicar as

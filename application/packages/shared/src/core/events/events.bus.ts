@@ -1,30 +1,33 @@
-import { DebugEvent } from "./events.types"
+import { DebugEvent } from "./events.types";
+import { isDebugEvent } from "./events.schema";
 
-export const EventBusEvents = {
-    dom: (event: DebugEvent) => {
-        console.log('DOM Event:', event); // TODO: Implement actual DOM event handling logic here
-    },
-    network: (event: DebugEvent) => {
-        console.log('Network Event:', event); // TODO: Implement actual network event handling logic here
-    },
-    console: (event: DebugEvent) => {
-        console.log('Console Event:', event); // TODO: Implement actual console event handling logic here
-    },
-    state: (event: DebugEvent) => {
-        console.log('State Event:', event); // TODO: Implement actual state event handling logic here
-    },
-    typescript: (event: DebugEvent) => {
-        console.log('TypeScript Event:', event); // TODO: Implement actual TypeScript event handling logic here
-    },
-    custom: (event: DebugEvent) => {
-        console.log('Custom Event:', event); // TODO: Implement actual custom event handling logic here
+type EventHandler = (event: DebugEvent) => void;
+
+export function createEventBus() {
+    const listeners = new Map<DebugEvent['type'], Set<EventHandler>>();
+    const wildcardListeners = new Set<EventHandler>();
+
+    function publish(event: DebugEvent): void {
+        if (!isDebugEvent(event)) {
+            console.error('[react-debug-machine] invalid event dropped:', event);
+            return;
+        }
+        listeners.get(event.type)?.forEach((handler) => handler(event));
+        wildcardListeners.forEach((handler) => handler(event));
     }
+
+    function subscribe(type: DebugEvent['type'], handler: EventHandler): () => void {
+        if (!listeners.has(type)) listeners.set(type, new Set());
+        listeners.get(type)!.add(handler);
+        return () => listeners.get(type)?.delete(handler);
+    }
+
+    function subscribeAll(handler: EventHandler): () => void {
+        wildcardListeners.add(handler);
+        return () => wildcardListeners.delete(handler);
+    }
+
+    return { publish, subscribe, subscribeAll };
 }
 
-export const EventBus = (origin: DebugEvent['type']) => {
-    return {
-        origin,
-        originalFn: EventBusEvents[origin],
-        replayFn: EventBusEvents[origin]
-    }
-}
+export type EventBus = ReturnType<typeof createEventBus>;

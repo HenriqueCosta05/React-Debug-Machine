@@ -25,7 +25,7 @@
 | Roteamento | N/A | — | Não é uma aplicação com rotas |
 | Camada de dados / API | N/A | — | Produto não tem backend próprio |
 | Persistência | In-memory (sessão do navegador) | — | Dados capturados nunca saem do navegador nem persistem entre sessões, por padrão |
-| Testes | Vitest (+ Playwright para cenários que exigem browser real) | — | Vitest para lógica isolada; Playwright para captura de DOM/rede/replay ponta-a-ponta |
+| Testes | Rstest (+ Playwright para cenários que exigem browser real) | — | Rstest é par nativo do build já adotado (`rslib`/rspack), API compatível com Vitest; Playwright para captura de DOM/rede/replay ponta-a-ponta |
 | Lint / format | EsLint + Prettier | — | — |
 | CI/CD | Github Actions (Publish npm + lint) | — | — |
 | Observabilidade | N/A no produto em si | — | O produto é a ferramenta de observabilidade de outra app |
@@ -133,10 +133,11 @@ Regras de import:
 
 | Tipo | Escopo | Ferramenta | Meta |
 |---|---|---|---|
-| Unitário | Lógica pura de cada adapter (parsing, diff, schema) | Vitest | Cobrir toda transformação de evento |
-| Integração | Adapter + DOM/estado simulado (jsdom) | Vitest + jsdom | Cobrir fluxo captura → evento no bus |
+| Unitário | Lógica pura de cada adapter (parsing, diff, schema) | Rstest | Cobrir toda transformação de evento |
+| Integração | Adapter + DOM/estado simulado (jsdom) | Rstest + jsdom | Cobrir fluxo captura → evento no bus |
 | E2E | Captura/replay ponta-a-ponta em app real (DOM, network, replay) | Playwright | Cobrir cenário de captura + replay determinístico |
 
+- Localização: `src/tests/` dentro de cada pacote, não colocado junto ao arquivo fonte (`*.test.ts` fora de `src/core`).
 - O que **sempre** exige teste: lógica de diff de estado, replay de mutações de DOM (posição/ordem), interceptação de rede (fetch e XHR), qualquer bug corrigido (teste de regressão).
 - O que **não** exige: markup estático do painel, wrappers triviais.
 - Testes descrevem comportamento, não implementação: `deve reproduzir remoção de nó no meio da lista na mesma posição original`.
@@ -262,3 +263,4 @@ flowchart LR
 | Data | Versão | Mudança | Autor |
 |---|---|---|---|
 | 2026-07-23 | 1.0 | Versão inicial | Henrique Costa |
+| 2026-07-29 | 1.1 | Runner de teste decidido: Rstest (não Vitest); convenção de localização de testes em `src/tests/` — §1.1 e §2.5 | Henrique Costa |

@@ -1,0 +1,7 @@
+packages:
+  - 'packages/*'
+  - 'demos/*'
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - '@rstest/core@0.11.5'
