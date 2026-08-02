@@ -3,7 +3,11 @@ import { createEventBus } from '../core/events/events.bus';
 import { DebugEvent } from '../core/events/events.types';
 
 const consoleEvent: DebugEvent = { type: 'console', timestamp: 1, data: 'log line' };
-const networkEvent: DebugEvent = { type: 'network', timestamp: 2, data: { status: 200 } };
+const networkEvent: DebugEvent = {
+    type: 'network',
+    timestamp: 2,
+    data: { phase: 'response', requestId: 'r1', method: 'GET', url: '/api/users', status: 200, ok: true, durationMs: 12 },
+};
 
 describe('createEventBus', () => {
     it('entrega evento só pro subscriber do type correspondente', () => {
