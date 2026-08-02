@@ -59,7 +59,7 @@
 1. **Clareza acima de esperteza**: código de instrumentação já é difícil de ler por natureza (hooks em internals, patches de globais); não piorar isso com abstração desnecessária.
 2. **Reversibilidade de patches globais**: qualquer patch em `console`, `fetch`, `XMLHttpRequest` ou fiber precisa de um caminho de restore explícito; nunca é permanente.
 3. **Simples agora, extensível depois**: evitar abstração compartilhada entre adapters antes do terceiro caso real de reuso.
-4. **Adapter é opcional e isolado**: cada adapter (dom-events, state, console, network, types) funciona de forma independente; a ausência de um não quebra os demais.
+4. **Adapter é opcional e isolado**: cada adapter (dom, state, console, network, types) funciona de forma independente; a ausência de um não quebra os demais.
 5. **Sem estado global sem justificativa**: o event bus em `shared` é a única fonte compartilhada; adapters não guardam estado próprio além do necessário para capturar/repetir.
 
 ### 2.2 Regras práticas
@@ -86,10 +86,10 @@
 | Tipos / interfaces | PascalCase, sem prefixo `I` | `DebugEvent` |
 | Booleanos | prefixo `is`/`has`/`should` | `isRecording` |
 | Handlers | `handleX` local, `onX` prop | `handleSeek` |
-| Pacotes npm | `@henriquecosta/react-debugmachine-<pacote>` | `@<henriquecosta>/react-debugmachine-network` |
+| Pacotes npm | `@henriquecosta/react-debug-machine-<pacote>` | `@henriquecosta/react-debug-machine-network` |
 | Idioma do código | inglês para código e commits; português para docs internas | — |
 
-> Scope npm definitivo ainda em aberto (Q-01 no PRD). Placeholder `<scope>` até ser decidido.
+> Scope `@henriquecosta` (Q-01 no PRD, resolvido: é o que `shared`/`dom`/`network` já publicam).
 
 ### 2.4 Estrutura de diretórios
 
@@ -110,7 +110,7 @@
     /application
         /packages
             /shared              # schema de eventos, event bus, modelo de timeline/sessão
-            /dom-events          # captura + replay de eventos DOM/sintéticos do React
+            /dom                 # captura + replay de eventos DOM/sintéticos do React
             /state                # adapters React state / Redux / TanStack
             /console             # interceptação de console.* (só captura, sem replay)
             /network             # fetch + XHR — captura + replay
@@ -182,7 +182,7 @@ Regras de import:
 
 ```mermaid
 flowchart LR
-    App[App React hospedeira] --> DOM[dom-events]
+    App[App React hospedeira] --> DOM[dom]
     App --> State[state: React/Redux/TanStack]
     App --> Console[console]
     App --> Network[network: fetch/XHR]
