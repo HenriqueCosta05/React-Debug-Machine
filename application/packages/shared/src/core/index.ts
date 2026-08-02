@@ -1,3 +1,7 @@
 export * from './events/events.bus'
 export * from './events/events.types'
 export * from './events/events.schema'
+export * from './timeline/timeline'
+export * from './timeline/timeline.types'
+export * from './session/session'
+export * from './session/session.types'

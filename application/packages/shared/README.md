@@ -2,7 +2,7 @@
 
 > Schema de eventos e event bus compartilhados pelos adapters do React Debug Machine.
 
-**Status:** em desenvolvimento (M1 do [PRD](../../../docs/PRD.md) — schema + bus concluídos; schema de `dom` e `network` (M2) também vive aqui; modelo de timeline/sessão ainda não implementado, ver [TODO.md](../../../TODO.md))
+**Status:** em desenvolvimento (M1 do [PRD](../../../docs/PRD.md) — schema + bus + modelo de timeline/sessão concluídos; schema de `dom`, `network` (M2) e `state` (M3) também vive aqui)
 
 ---
 
@@ -53,15 +53,55 @@ unsubscribe();
 
 Type guard usado internamente por `publish()`, também exportado pra quem quiser validar um evento fora do bus (ex.: antes de serializar pra replay).
 
+### `createTimeline(bus)`
+
+Assina `bus.subscribeAll` e acumula os eventos em ordem, cada um com `sequence` (inteiro crescente, 1-based) atribuído no momento do registro.
+
+```ts
+import { createEventBus, createTimeline } from '@henriquecosta/react-debug-machine-shared';
+
+const bus = createEventBus();
+const timeline = createTimeline(bus);
+
+bus.publish({ type: 'console', timestamp: performance.now(), data: 'hello' });
+
+timeline.getEvents();               // TimelineEntry[] em ordem de chegada
+timeline.getEventsByType('console'); // só os do domínio pedido
+timeline.clear();                    // esvazia e reseta sequence
+timeline.stop();                     // desliga o registro (unsubscribe do bus)
+```
+
+Não faz seek/scrubbing nem persiste nada — isso é responsabilidade do painel `devtools` (M6), que consome `getEvents()`/`getEventsByType()` pra montar sua própria UI de navegação.
+
+### `createDebugSession()`
+
+Empacota `Session` (id + `startedAt`) com um `bus` e uma `timeline` próprios e independentes — cada chamada cria um bus novo, não há singleton global.
+
+```ts
+import { createDebugSession } from '@henriquecosta/react-debug-machine-shared';
+
+const { session, bus, timeline, end } = createDebugSession();
+
+// adapters seguem recebendo `bus` normalmente (assinatura inalterada)
+startDomCapture(bus);
+
+end(); // para a timeline; não afeta os adapters, que têm seu próprio restore
+```
+
 ### Tipos
 
 | Tipo | Descrição |
 |---|---|
-| `DebugEvent` | União discriminada por `type`: `'dom' \| 'network' \| 'console' \| 'state' \| 'typescript' \| 'custom'`. `dom` e `network` têm `data` tipado (`DomEventData`, `NetworkEventData`); os demais domínios ficam `unknown` até seus adapters existirem. |
+| `DebugEvent` | União discriminada por `type`: `'dom' \| 'network' \| 'console' \| 'state' \| 'typescript' \| 'custom'`. `dom`, `network` e `state` têm `data` tipado (`DomEventData`, `NetworkEventData`, `StateEventData`); os demais domínios ficam `unknown` até seus adapters existirem. |
 | `DomEventData` | `{ nativeType: string; target: DomTargetDescriptor }` |
 | `DomTargetDescriptor` | Descritor serializável de um `Element` (`tagName`, `id`, `className`, `selectorPath`) — nunca retém referência viva ao DOM. |
 | `NetworkEventData` | União discriminada por `phase`: `request` (`requestId`, `method`, `url`), `response` (+ `status`, `ok`, `durationMs`), `error` (+ `durationMs`, `message`). `requestId` correlaciona as fases de uma mesma chamada. |
+| `StateEventData` | `{ origin: 'react' \| 'redux' \| 'tanstack'; label: string; before: unknown; after: unknown }`. `before`/`after` ficam `unknown` porque o shape do estado da app hospedeira é arbitrário. |
 | `EventBus` | `ReturnType<typeof createEventBus>` |
+| `Timeline` | `ReturnType<typeof createTimeline>` |
+| `TimelineEntry` | `DebugEvent & { sequence: number }` |
+| `Session` | `{ id: string; startedAt: number }` |
+| `DebugSession` | `ReturnType<typeof createDebugSession>` — `{ session, bus, timeline, end }` |
 
 ---
 
@@ -80,7 +120,7 @@ Type guard usado internamente por `publish()`, também exportado pra quem quiser
 pnpm test
 ```
 
-14 testes (Rstest) em `src/tests/`: cobrem `createEventBus` (dispatch por type, wildcard, unsubscribe, evento inválido descartado) e `isDebugEvent` (aceite/rejeição por domínio, timestamp, tipos desconhecidos, valores primitivos, fases de `NetworkEventData`).
+25 testes (Rstest) em `src/tests/`: cobrem `createEventBus` (dispatch por type, wildcard, unsubscribe, evento inválido descartado), `isDebugEvent` (aceite/rejeição por domínio, timestamp, tipos desconhecidos, valores primitivos, fases de `NetworkEventData`, `StateEventData`), `createTimeline` (ordem/sequence, filtro por type, clear, stop, evento inválido não entra) e `createDebugSession` (id único, bus/timeline ligados, end() para o registro, sessões independentes).
 
 ---
 
@@ -93,6 +133,12 @@ src/
       events.bus.ts      createEventBus
       events.schema.ts    isDebugEvent (type guards)
       events.types.ts     DebugEvent e tipos de domínio
+    timeline/
+      timeline.ts          createTimeline
+      timeline.types.ts    TimelineEntry
+    session/
+      session.ts            createDebugSession
+      session.types.ts       Session
     index.ts               ponto único de exports do pacote
   tests/                    espelha src/core, não fica junto ao arquivo fonte
 ```

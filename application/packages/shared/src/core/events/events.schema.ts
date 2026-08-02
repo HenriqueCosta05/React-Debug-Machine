@@ -1,10 +1,11 @@
-import { DebugEvent, DomEventData, DomTargetDescriptor, NetworkEventData } from "./events.types";
+import { DebugEvent, DomEventData, DomTargetDescriptor, NetworkEventData, StateEventData } from "./events.types";
 
 const EVENT_TYPES: ReadonlySet<DebugEvent['type']> = new Set([
     'dom', 'network', 'console', 'state', 'typescript', 'custom',
 ]);
 
 const NETWORK_PHASES = new Set(['request', 'response', 'error']);
+const STATE_ORIGINS = new Set(['react', 'redux', 'tanstack']);
 
 function isDomTargetDescriptor(value: unknown): value is DomTargetDescriptor {
     if (typeof value !== 'object' || value === null) return false;
@@ -33,6 +34,16 @@ function isNetworkEventData(value: unknown): value is NetworkEventData {
     return true;
 }
 
+function isStateEventData(value: unknown): value is StateEventData {
+    if (typeof value !== 'object' || value === null) return false;
+    const v = value as Record<string, unknown>;
+    return (
+        typeof v.origin === 'string' && STATE_ORIGINS.has(v.origin) &&
+        typeof v.label === 'string' &&
+        'before' in v && 'after' in v
+    );
+}
+
 export function isDebugEvent(value: unknown): value is DebugEvent {
     if (typeof value !== 'object' || value === null) return false;
     const v = value as Record<string, unknown>;
@@ -40,5 +51,6 @@ export function isDebugEvent(value: unknown): value is DebugEvent {
     if (typeof v.type !== 'string' || !EVENT_TYPES.has(v.type as DebugEvent['type'])) return false;
     if (v.type === 'dom') return isDomEventData(v.data);
     if (v.type === 'network') return isNetworkEventData(v.data);
+    if (v.type === 'state') return isStateEventData(v.data);
     return true;
 }

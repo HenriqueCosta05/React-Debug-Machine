@@ -4,7 +4,7 @@
 |---|---|
 | Projeto | React Debug Machine |
 | Versão do documento | 2.0 |
-| Última atualização | 2026-07-23 |
+| Última atualização | 2026-08-02 |
 | Responsável | Henrique Costa |
 | Status | `final` |
 
@@ -228,6 +228,8 @@ flowchart LR
 |---|---|---|---|
 | ADR-001 | Split de pacotes por feature (um pacote por capacidade) em vez de monólito ou split por record/replay | aceita | 2026-07-23 |
 | ADR-002 | Como o TS Language Service roda no browser para viabilizar `types` (R-05) | proposta | — |
+| ADR-003 | Modelo de timeline/sessão implementado em `shared` (`createTimeline`, `createDebugSession`) desde o M1/M2, mesmo sem `devtools` (M6) ainda existir: `createTimeline(bus)` só acumula `DebugEvent` em ordem com `sequence`, sem seek/scrubbing (isso fica pra `devtools`); assinatura de adapters (`startXCapture(bus)`) não muda, `Session` é aditivo | aceita | 2026-08-02 |
+| ADR-004 | Adapter `state` (M3) captura React via hook opt-in (`useDebugState`, wrapper de `useState`) em vez de introspecção de fiber, evitando o risco de RK-01 (internals não-documentados, shape muda entre versões); Redux e TanStack usam suas APIs públicas de subscribe/getState | aceita | 2026-08-02 |
 
 ### 3.7 Anti-padrões proibidos neste projeto
 
@@ -264,3 +266,4 @@ flowchart LR
 |---|---|---|---|
 | 2026-07-23 | 1.0 | Versão inicial | Henrique Costa |
 | 2026-07-29 | 1.1 | Runner de teste decidido: Rstest (não Vitest); convenção de localização de testes em `src/tests/` — §1.1 e §2.5 | Henrique Costa |
+| 2026-08-02 | 1.2 | ADR-003 (timeline/sessão em `shared`) e ADR-004 (adapter `state` via hook, não fiber) — §3.6 | Henrique Costa |

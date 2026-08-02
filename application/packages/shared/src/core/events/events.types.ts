@@ -38,10 +38,19 @@ export type NetworkErrorPhase = {
 
 export type NetworkEventData = NetworkRequestPhase | NetworkResponsePhase | NetworkErrorPhase;
 
+export type StateOrigin = 'react' | 'redux' | 'tanstack';
+
+export type StateEventData = {
+    origin: StateOrigin;
+    label: string;
+    before: unknown;
+    after: unknown;
+};
+
 export type DebugEvent =
     | { type: 'dom'; data: DomEventData; timestamp: number }
     | { type: 'network'; data: NetworkEventData; timestamp: number }
     | { type: 'console'; data: unknown; timestamp: number }
-    | { type: 'state'; data: unknown; timestamp: number }
+    | { type: 'state'; data: StateEventData; timestamp: number }
     | { type: 'typescript'; data: unknown; timestamp: number }
     | { type: 'custom'; data: unknown; timestamp: number };

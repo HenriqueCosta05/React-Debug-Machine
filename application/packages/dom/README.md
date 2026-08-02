@@ -2,15 +2,15 @@
 
 > Adapter de captura e replay de eventos DOM do React Debug Machine.
 
-**Status:** em desenvolvimento (M2 do [PRD](../../../docs/PRD.md) — capture/roots/replay concluídos; E2E Playwright adiado, ver [TODO.md](../../../TODO.md))
+**Status:** Versão 2.0
 
 ---
 
 ## Sobre
 
-Escuta eventos nativos do DOM em capture-phase no `document`, serializa o alvo sem reter referência viva ao `Element` e publica no event bus do [`shared`](../shared/README.md) como `DebugEvent` do tipo `dom` (R-01 do PRD).
+Escuta eventos nativos do DOM em fase de captura no `document`, serializa o alvo sem reter referência viva ao `Element` e publica no event bus do [`shared`](../shared/README.md) como `DebugEvent` do tipo `dom` (R-01 do PRD).
 
-Capture-phase no `document` funciona antes do listener delegado do React (anexado no root container, um descendente do `document`) — cobre qualquer versão de React e também apps sem React.
+A fase de captura no `document` funciona antes do listener delegado do React (anexado no root container, um descendente do `document`) — cobre qualquer versão de React e também apps sem React.
 
 ---
 
