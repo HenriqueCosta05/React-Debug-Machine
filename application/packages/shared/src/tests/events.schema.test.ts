@@ -22,8 +22,37 @@ describe('isDebugEvent', () => {
     });
 
     it('aceita domínios ainda não tipados (data unknown) desde que tenham type/timestamp válidos', () => {
-        expect(isDebugEvent({ type: 'network', timestamp: 1, data: { anything: true } })).toBe(true);
         expect(isDebugEvent({ type: 'console', timestamp: 1, data: 'log line' })).toBe(true);
+        expect(isDebugEvent({ type: 'state', timestamp: 1, data: { anything: true } })).toBe(true);
+    });
+
+    it('aceita evento network na fase request com requestId/method/url', () => {
+        expect(isDebugEvent({
+            type: 'network',
+            timestamp: 1,
+            data: { phase: 'request', requestId: 'r1', method: 'GET', url: '/api/users' },
+        })).toBe(true);
+    });
+
+    it('aceita evento network na fase response com status/ok/durationMs', () => {
+        expect(isDebugEvent({
+            type: 'network',
+            timestamp: 2,
+            data: { phase: 'response', requestId: 'r1', method: 'GET', url: '/api/users', status: 200, ok: true, durationMs: 12.3 },
+        })).toBe(true);
+    });
+
+    it('aceita evento network na fase error com message/durationMs', () => {
+        expect(isDebugEvent({
+            type: 'network',
+            timestamp: 3,
+            data: { phase: 'error', requestId: 'r1', method: 'GET', url: '/api/users', durationMs: 5, message: 'Failed to fetch' },
+        })).toBe(true);
+    });
+
+    it('rejeita evento network sem os campos exigidos pela fase', () => {
+        expect(isDebugEvent({ type: 'network', timestamp: 1, data: { phase: 'response', requestId: 'r1', method: 'GET', url: '/x' } })).toBe(false);
+        expect(isDebugEvent({ type: 'network', timestamp: 1, data: { phase: 'unknown-phase', requestId: 'r1', method: 'GET', url: '/x' } })).toBe(false);
     });
 
     it('rejeita type desconhecido', () => {

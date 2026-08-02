@@ -2,7 +2,7 @@
 
 > Schema de eventos e event bus compartilhados pelos adapters do React Debug Machine.
 
-**Status:** em desenvolvimento (M1 do [PRD](../../../docs/PRD.md) — schema + bus concluídos; modelo de timeline/sessão ainda não implementado, ver [TODO.md](../../../TODO.md))
+**Status:** em desenvolvimento (M1 do [PRD](../../../docs/PRD.md) — schema + bus concluídos; schema de `dom` e `network` (M2) também vive aqui; modelo de timeline/sessão ainda não implementado, ver [TODO.md](../../../TODO.md))
 
 ---
 
@@ -57,9 +57,10 @@ Type guard usado internamente por `publish()`, também exportado pra quem quiser
 
 | Tipo | Descrição |
 |---|---|
-| `DebugEvent` | União discriminada por `type`: `'dom' \| 'network' \| 'console' \| 'state' \| 'typescript' \| 'custom'`. Só `dom` tem `data` tipado hoje (`DomEventData`); os demais domínios ficam `unknown` até seus adapters existirem. |
+| `DebugEvent` | União discriminada por `type`: `'dom' \| 'network' \| 'console' \| 'state' \| 'typescript' \| 'custom'`. `dom` e `network` têm `data` tipado (`DomEventData`, `NetworkEventData`); os demais domínios ficam `unknown` até seus adapters existirem. |
 | `DomEventData` | `{ nativeType: string; target: DomTargetDescriptor }` |
 | `DomTargetDescriptor` | Descritor serializável de um `Element` (`tagName`, `id`, `className`, `selectorPath`) — nunca retém referência viva ao DOM. |
+| `NetworkEventData` | União discriminada por `phase`: `request` (`requestId`, `method`, `url`), `response` (+ `status`, `ok`, `durationMs`), `error` (+ `durationMs`, `message`). `requestId` correlaciona as fases de uma mesma chamada. |
 | `EventBus` | `ReturnType<typeof createEventBus>` |
 
 ---
@@ -79,13 +80,13 @@ Type guard usado internamente por `publish()`, também exportado pra quem quiser
 pnpm test
 ```
 
-10 testes (Rstest) em `src/tests/`: cobrem `createEventBus` (dispatch por type, wildcard, unsubscribe, evento inválido descartado) e `isDebugEvent` (aceite/rejeição por domínio, timestamp, tipos desconhecidos, valores primitivos).
+14 testes (Rstest) em `src/tests/`: cobrem `createEventBus` (dispatch por type, wildcard, unsubscribe, evento inválido descartado) e `isDebugEvent` (aceite/rejeição por domínio, timestamp, tipos desconhecidos, valores primitivos, fases de `NetworkEventData`).
 
 ---
 
 ## Estrutura
 
-```
+```text
 src/
   core/
     events/
