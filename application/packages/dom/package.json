@@ -1,0 +1,47 @@
+{
+  "name": "@henriquecosta/react-debug-machine-dom",
+  "version": "2.0.0",
+  "description": "DOM event capture and replay adapter for React Debug Machine.",
+  "type": "module",
+  "keywords": [
+    "npm",
+    "react",
+    "debug",
+    "timemachine",
+    "devtools",
+    "dom"
+  ],
+  "homepage": "https://github.com/HenriqueCosta05/React-Debug-Machine#readme",
+  "bugs": {
+    "url": "https://github.com/HenriqueCosta05/React-Debug-Machine/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HenriqueCosta05/React-Debug-Machine.git"
+  },
+  "license": "MIT",
+  "author": "Henrique Costa",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "eslint . && rslib build",
+    "test": "rstest run",
+    "prepublish": "npm run build"
+  },
+  "dependencies": {
+    "@henriquecosta/react-debug-machine-shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@eslint/css": "^1.4.0",
+    "@eslint/js": "^10.0.1",
+    "@eslint/markdown": "^8.0.3",
+    "@rsbuild/core": "^2.1.8",
+    "@rslib/core": "^0.23.2",
+    "@rstest/core": "^0.11.5",
+    "eslint": "^10.8.0",
+    "globals": "^17.7.0",
+    "jiti": "^2.7.0",
+    "jsdom": "^25.0.1",
+    "typescript-eslint": "^8.65.0"
+  }
+}
