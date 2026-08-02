@@ -63,9 +63,9 @@ Nenhum serviço externo é necessário — ferramenta 100% client-side.
 
 ## Quick start
 
-> `application/` já é um workspace `pnpm` funcional (`shared`, `dom` e
-> `network` buildam e testam com Rstest). Os demais pacotes (`state`,
-> `console`, `types`, `devtools`) ainda estão vazios — ver [TODO.md](TODO.md).
+> `application/` já é um workspace `pnpm` funcional (`shared`, `dom`,
+> `network` e `state` buildam e testam com Rstest). Os demais pacotes
+> (`console`, `types`, `devtools`) ainda estão vazios — ver [TODO.md](TODO.md).
 
 ```bash
 # 1. Clonar

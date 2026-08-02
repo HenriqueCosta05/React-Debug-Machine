@@ -23,7 +23,20 @@ describe('isDebugEvent', () => {
 
     it('aceita domínios ainda não tipados (data unknown) desde que tenham type/timestamp válidos', () => {
         expect(isDebugEvent({ type: 'console', timestamp: 1, data: 'log line' })).toBe(true);
-        expect(isDebugEvent({ type: 'state', timestamp: 1, data: { anything: true } })).toBe(true);
+        expect(isDebugEvent({ type: 'typescript', timestamp: 1, data: { anything: true } })).toBe(true);
+    });
+
+    it('aceita evento state com origin/label/before/after', () => {
+        expect(isDebugEvent({
+            type: 'state',
+            timestamp: 1,
+            data: { origin: 'redux', label: 'todos', before: { count: 0 }, after: { count: 1 } },
+        })).toBe(true);
+    });
+
+    it('rejeita evento state com origin desconhecida ou campos ausentes', () => {
+        expect(isDebugEvent({ type: 'state', timestamp: 1, data: { origin: 'mobx', label: 'x', before: 1, after: 2 } })).toBe(false);
+        expect(isDebugEvent({ type: 'state', timestamp: 1, data: { origin: 'redux', label: 'x' } })).toBe(false);
     });
 
     it('aceita evento network na fase request com requestId/method/url', () => {

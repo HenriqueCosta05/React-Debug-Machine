@@ -1,0 +1,74 @@
+{
+  "name": "@henriquecosta/react-debug-machine-state",
+  "version": "2.0.0",
+  "description": "State adapter (React state, Redux, TanStack Query) for React Debug Machine.",
+  "type": "module",
+  "keywords": [
+    "npm",
+    "react",
+    "debug",
+    "timemachine",
+    "devtools",
+    "state",
+    "redux",
+    "tanstack"
+  ],
+  "homepage": "https://github.com/HenriqueCosta05/React-Debug-Machine#readme",
+  "bugs": {
+    "url": "https://github.com/HenriqueCosta05/React-Debug-Machine/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HenriqueCosta05/React-Debug-Machine.git"
+  },
+  "license": "MIT",
+  "author": "Henrique Costa",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "lint": "eslint .",
+    "build": "npm run lint && rslib build",
+    "test": "rstest run",
+    "coverage": "rstest run --coverage",
+    "prepublish": "npm run build"
+  },
+  "dependencies": {
+    "@henriquecosta/react-debug-machine-shared": "workspace:*"
+  },
+  "peerDependencies": {
+    "@tanstack/query-core": "^5.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "redux": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/query-core": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "redux": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@eslint/css": "^1.4.0",
+    "@eslint/js": "^10.0.1",
+    "@eslint/markdown": "^8.0.3",
+    "@rsbuild/core": "^2.1.8",
+    "@rslib/core": "^0.23.2",
+    "@rstest/core": "^0.11.5",
+    "@rstest/coverage-v8": "^0.11.5",
+    "@tanstack/query-core": "^5.62.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^10.8.0",
+    "globals": "^17.7.0",
+    "jiti": "^2.7.0",
+    "jsdom": "^25.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "redux": "^5.0.1",
+    "typescript-eslint": "^8.65.0"
+  }
+}
