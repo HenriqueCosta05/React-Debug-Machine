@@ -13,6 +13,7 @@ Live backlog. Itens concluídos migram pra "Concluído" com check, não são rem
 - [ ] docs: atualizar `docs/CONVENTIONS.md` §2.4 — pacote real é `dom` (não `dom-events` como documentado)
 - [ ] docs: reconciliar padrão de nome de pacote npm — `CONVENTIONS.md` §2.3 diz `react-debugmachine-<pacote>`, mas `shared` publicado usa `react-debug-machine-shared` (com hífen extra); decidir um e alinhar os dois
 - [ ] docs: `README.md` Quick start diz que `application/` "ainda não existe" — já existe, `shared` builda e testa com Rstest; atualizar Quick start
+- [ ] docs/scope: `CONVENTIONS.md` §2.4 lista `shared` como dono de "schema de eventos, event bus, modelo de timeline/sessão" — timeline/sessão ainda não implementado nem rastreado como item próprio; decidir se entra no M1 (reabrir) ou se `devtools` (M6) monta a timeline direto a partir do bus, sem esse modelo em `shared`
 
 ## Concluído
 
