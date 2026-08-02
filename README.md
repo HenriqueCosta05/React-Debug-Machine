@@ -63,9 +63,9 @@ Nenhum serviço externo é necessário — ferramenta 100% client-side.
 
 ## Quick start
 
-> O workspace `application/` ainda não existe neste repositório (projeto
-> reiniciado do zero — ver [TODO.md](TODO.md)). Os comandos abaixo refletem
-> o fluxo planejado e passam a valer assim que o workspace for recriado.
+> `application/` já é um workspace `pnpm` funcional (`shared`, `dom` e
+> `network` buildam e testam com Rstest). Os demais pacotes (`state`,
+> `console`, `types`, `devtools`) ainda estão vazios — ver [TODO.md](TODO.md).
 
 ```bash
 # 1. Clonar

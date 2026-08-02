@@ -4,19 +4,20 @@ Live backlog. Itens concluídos migram pra "Concluído" com check, não são rem
 
 ## Now
 
-- [ ] M2 — `dom`: pacote está vazio (nenhum arquivo) — criar do zero: `package.json`, `tsconfig.json` (`lib: ["ES2022", "DOM"]`), `rslib.config.ts` (usar `shared` como referência de estrutura)
-- [ ] M2 — `dom`: capture/ — listener em capture-phase no `document` (funciona antes do listener delegado do React em qualquer versão/root, e em apps não-React), serialização de target sem reter referência viva ao `Element`, publish no bus com timestamp via `performance.now()`
-- [ ] M2 — `dom`: roots/registry.ts — root-awareness opt-in via `Element.contains()`, sem introspecção de fiber (fica fora de escopo, é trabalho do futuro adapter `state`)
-- [ ] M2 — `dom`: replay/ — reconstrução de `Event` por tipo + `dispatchEvent`, limitações documentadas (isTrusted sempre false, selectorPath obsoleto falha graciosamente)
-- [ ] M2 — `dom`: testes unit + jsdom com Rstest (E2E Playwright adiado — bloqueado por `application/demos/demo` estar vazio)
-- [ ] M2 — Implementar adapter `network` (R-04: captura fetch/XHR, correlacionar request/response) — maior precedente técnico do projeto anterior (fiber hooks, network-hook.ts)
-- [ ] docs: atualizar `docs/CONVENTIONS.md` §2.4 — pacote real é `dom` (não `dom-events` como documentado)
-- [ ] docs: reconciliar padrão de nome de pacote npm — `CONVENTIONS.md` §2.3 diz `react-debugmachine-<pacote>`, mas `shared` publicado usa `react-debug-machine-shared` (com hífen extra); decidir um e alinhar os dois
-- [ ] docs: `README.md` Quick start diz que `application/` "ainda não existe" — já existe, `shared` builda e testa com Rstest; atualizar Quick start
+- [ ] M2 — `dom`: testes E2E Playwright adiado — bloqueado por `application/demos/demo` estar vazio (unit + jsdom com Rstest já cobrem capture/roots/replay)
 - [ ] docs/scope: `CONVENTIONS.md` §2.4 lista `shared` como dono de "schema de eventos, event bus, modelo de timeline/sessão" — timeline/sessão ainda não implementado nem rastreado como item próprio; decidir se entra no M1 (reabrir) ou se `devtools` (M6) monta a timeline direto a partir do bus, sem esse modelo em `shared`
 
 ## Concluído
 
+- [x] M2 — `dom`: pacote criado do zero — `package.json`, `tsconfig.json` (`lib: ["ES2022", "DOM"]`), `rslib.config.ts` (mesma estrutura de `shared`)
+- [x] M2 — `dom`: capture/ — listener em capture-phase no `document` (funciona antes do listener delegado do React em qualquer versão/root, e em apps não-React), serialização de target sem reter referência viva ao `Element`, publish no bus com timestamp via `performance.now()`
+- [x] M2 — `dom`: roots/registry.ts — root-awareness opt-in via `Element.contains()`, sem introspecção de fiber
+- [x] M2 — `dom`: replay/ — reconstrução de `Event` por tipo + `dispatchEvent`, limitações documentadas (isTrusted sempre false, selectorPath obsoleto falha graciosamente)
+- [x] M2 — `dom`: testes unit + jsdom com Rstest (19 testes: target, registry, capture, replay)
+- [x] M2 — Implementar adapter `network` (R-04: captura fetch/XHR, correlacionar request/response via `requestId`) — `shared` ganhou `NetworkEventData` (fases `request`/`response`/`error`) seguindo o mesmo padrão de `DomEventData`; 8 testes (Rstest + jsdom)
+- [x] docs: atualizar `docs/CONVENTIONS.md` §2.4 — pacote real é `dom` (não `dom-events` como documentado)
+- [x] docs: reconciliar padrão de nome de pacote npm — `CONVENTIONS.md` §2.3 atualizado pra `react-debug-machine-<pacote>`, alinhado ao que `shared`/`dom`/`network` já publicam
+- [x] docs: `README.md` Quick start diz que `application/` "ainda não existe" — já existe, `shared`/`dom`/`network` buildam e testam com Rstest; Quick start atualizado
 - [x] M1 — infra: criar `pnpm-workspace.yaml` + `package.json` raiz em `application/` (pré-requisito pra linkar `dom` ↔ `shared` via `workspace:*`)
 - [x] M1 — `shared`: substituir stub `EventBusEvents`/`EventBus` por bus real (`createEventBus()` com `publish`/`subscribe`/`subscribeAll`), removendo `EventBusType`/`originalFn`/`replayFn` (abstração prematura)
 - [x] M1 — `shared`: tipar `DebugEvent.data` como union discriminada por `type`, começando por `DomEventData`/`DomTargetDescriptor` (R-01); demais domínios ficam `unknown` até seus adapters existirem

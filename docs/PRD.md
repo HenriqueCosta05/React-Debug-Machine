@@ -124,7 +124,7 @@ Uma camada de instrumentação client-side com um adapter por capacidade (DOM, e
 | Marco | Entregável | Data alvo | Responsável |
 |---|---|---|---|
 | M1 | `shared` (schema de eventos + event bus) | a definir | Henrique Costa |
-| M2 | Adapters `dom-events` e `network` (maior precedente técnico) | a definir | Henrique Costa |
+| M2 | Adapters `dom` e `network` (maior precedente técnico) | a definir | Henrique Costa |
 | M3 | Adapter `state` (React + Redux + TanStack) | a definir | Henrique Costa |
 | M4 | Adapter `console` | a definir | Henrique Costa |
 | M5 | Adapter `types` (validar viabilidade do Language Service primeiro) | a definir | Henrique Costa |
@@ -144,7 +144,7 @@ Uma camada de instrumentação client-side com um adapter por capacidade (DOM, e
 **Questões em aberto**
 | ID | Pergunta | Bloqueia? | Responsável | Prazo | Resposta / data |
 |---|---|---|---|---|---|
-| Q-01 | Qual scope npm definitivo para os pacotes renomeados? | Sim | Henrique Costa | antes do M1 | — |
+| Q-01 | Qual scope npm definitivo para os pacotes renomeados? | Sim | Henrique Costa | antes do M1 | `@henriquecosta`, formato `react-debug-machine-<pacote>` — já em uso por `shared`/`dom`/`network` |
 | Q-02 | Metas concretas de overhead de runtime e bundle size | Não | Henrique Costa | antes do v1.0 | — |
 | Q-03 | Viabilidade técnica do TS Language Service no browser | Sim (para R-05/M5) | Henrique Costa | antes do M5 | — |
 
