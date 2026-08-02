@@ -71,7 +71,7 @@ function Publish {
         Invoke-Native { pnpm run build }
     }
 
-    $publishArgs = @("-r", "--filter", "./packages/**", "publish", "--access", "public", "--tag", $Tag, "--no-bail")
+    $publishArgs = @("-r", "--filter", "./packages/**", "publish", "--access", "public", "--tag", $Tag)
     if ($SkipGitChecks -or $isCI) {
         $publishArgs += "--no-git-checks"
     }
@@ -82,7 +82,7 @@ function Publish {
     Write-Host "Running: pnpm $($publishArgs -join ' ')"
     & pnpm @publishArgs
     if ($LASTEXITCODE -ne 0) {
-        Write-Error "One or more packages failed to publish. Check output above (an 'already published version' error is expected and non-fatal when a package's version was not bumped)."
+        Write-Error "One or more packages failed to publish. Check output above (an 'already published version' error is expected when a package's version was not bumped)."
         exit $LASTEXITCODE
     }
 

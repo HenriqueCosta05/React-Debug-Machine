@@ -64,7 +64,7 @@ if [[ "$SKIP_BUILD" -eq 0 ]]; then
     pnpm run build
 fi
 
-publish_args=(-r --filter "./packages/**" publish --access public --tag "$TAG" --no-bail)
+publish_args=(-r --filter "./packages/**" publish --access public --tag "$TAG")
 if [[ "$SKIP_GIT_CHECKS" -eq 1 || "$is_ci" == "true" ]]; then
     publish_args+=(--no-git-checks)
 fi
