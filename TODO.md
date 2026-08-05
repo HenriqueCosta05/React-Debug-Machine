@@ -4,11 +4,14 @@ Live backlog. Itens concluídos migram pra "Concluído" com check, não são rem
 
 ## Now
 
-- [ ] M2 — `dom`: testes E2E Playwright adiado — bloqueado por `application/demos/demo` estar vazio (unit + jsdom com Rstest já cobrem capture/roots/replay)
-- [ ] M3 — `state`: diff por slice no adapter Redux e captura do `action.type` (exigiria middleware/enhancer; fora desta primeira versão, ver README do pacote)
+- [ ] M4 — Implementar adapter `console`: interceptação de console.* sem suprimir comportamento original (R-03; só captura, sem replay)
+- [ ] M5 — Implementar adapter `types`: diagnostics do TS Language Service ligados ao componente/estado de origem (R-05; bloqueado até validação de viabilidade acima)
+- [ ] M6 — Implementar painel `devtools` unificando os 5 domínios (DOM, estado, console, rede, tipos) com uma UI anexada à aplicação hospedeira via Browser Window. Opcional, deverá ser um novo pacote.
 
 ## Concluído
 
+- [x] M3 — `state`: diff por slice no adapter Redux via `sliceKeys` opcional (`startReduxCapture(bus, store, label, sliceKeys)`) — 1 evento por chave top-level que mudou (`Object.is`), sem `sliceKeys` mantém diff do state inteiro (compat). `action.type` continua fora de escopo: exigiria middleware/enhancer, o que contradiz a premissa do PRD R-02 ("sem exigir middleware específico") e o ADR-004 aceito; decisão confirmada com o usuário, não implementado
+- [x] M2 — `dom`: teste E2E Playwright em navegador real — demo `InfinityUI` (`application/demos/InfinityUI`) ganhou dependência workspace de `dom`/`shared`, bootstrap dev-only `src/debug/timeMachine.ts` (cria `DebugSession`, registra root, `startDomCapture`, expõe `window.__timeMachine`) e `e2e/dom-capture.spec.ts`: clica em elemento real (ícone SVG dentro de `<button>`), confirma captura em capture-phase não interfere no handler React (carrinho abre) e que o evento `dom` chega na timeline com `selectorPath` correto
 - [x] M3 — `state`: pacote criado do zero — `package.json` com `redux`/`@tanstack/query-core`/`react` como peerDependencies opcionais (`peerDependenciesMeta`), `tsconfig.json`/`rslib.config.ts`/`eslint.config.mts`/`rstest.config.ts` espelhando `network`
 - [x] M3 — `state`: adapter Redux (`startReduxCapture`) — `store.subscribe` + diff antes/depois via `store.getState()`, label configurável (default `'store'`)
 - [x] M3 — `state`: adapter TanStack Query (`startTanstackCapture`) — subscribe ao `QueryCache`, diff por `queryHash` (label = `queryKey` serializado), `before` `undefined` na 1ª transição
@@ -34,10 +37,5 @@ Live backlog. Itens concluídos migram pra "Concluído" com check, não são rem
 
 ## Later / ideas
 
-- [ ] M4 — Implementar adapter `console`: interceptação de console.* sem suprimir comportamento original (R-03; só captura, sem replay)
-- [ ] M5 — Implementar adapter `types`: diagnostics do TS Language Service ligados ao componente/estado de origem (R-05; bloqueado até validação de viabilidade acima)
-- [ ] M6 — Implementar painel `devtools` unificando os 5 domínios (DOM, estado, console, rede, tipos) com timeline scrubber
-- [ ] Definir metas concretas de overhead de runtime e bundle size (PRD Q-02, antes do v1.0)
-- [ ] Rodar benchmark de overhead da instrumentação desabilitada (RNF de performance do PRD, orçamento ainda a validar)
 
 ## Known issues

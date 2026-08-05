@@ -1,5 +1,5 @@
 import { describe, expect, it, rstest } from '@rstest/core';
-import { createStore } from 'redux';
+import { combineReducers, createStore } from 'redux';
 import { createEventBus } from '@henriquecosta/react-debug-machine-shared';
 import { startReduxCapture } from '../core/adapters/redux.adapter';
 
@@ -10,6 +10,12 @@ function counterReducer(state: CounterState = { count: 0 }, action: CounterActio
     if (action.type === 'increment') return { count: state.count + 1 };
     return state;
 }
+
+function userReducer(state = { name: 'anon' }) {
+    return state;
+}
+
+const rootReducer = combineReducers({ counter: counterReducer, user: userReducer });
 
 describe('startReduxCapture', () => {
     it('publica before/after a cada dispatch que muda o state', () => {
@@ -50,6 +56,34 @@ describe('startReduxCapture', () => {
         const stop = startReduxCapture(bus, store);
         stop();
         store.dispatch({ type: 'increment' });
+
+        expect(handler).not.toHaveBeenCalled();
+    });
+
+    it('com sliceKeys, publica 1 evento só pra chave que mudou', () => {
+        const bus = createEventBus();
+        const handler = rstest.fn();
+        bus.subscribe('state', handler);
+        const store = createStore(rootReducer);
+
+        startReduxCapture(bus, store, 'root', ['counter', 'user']);
+        store.dispatch({ type: 'increment' });
+
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(expect.objectContaining({
+            type: 'state',
+            data: { origin: 'redux', label: 'root.counter', before: { count: 0 }, after: { count: 1 } },
+        }));
+    });
+
+    it('com sliceKeys, não publica nada se nenhuma das chaves mudou', () => {
+        const bus = createEventBus();
+        const handler = rstest.fn();
+        bus.subscribe('state', handler);
+        const store = createStore(rootReducer);
+
+        startReduxCapture(bus, store, 'root', ['counter', 'user']);
+        store.dispatch({ type: 'noop' });
 
         expect(handler).not.toHaveBeenCalled();
     });

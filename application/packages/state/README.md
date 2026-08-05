@@ -18,7 +18,7 @@ Cada `start*Capture` é reversível: a função retornada cancela o subscribe.
 
 ## API
 
-### `startReduxCapture(bus, store, label?)`
+### `startReduxCapture(bus, store, label?, sliceKeys?)`
 
 ```ts
 import { createEventBus } from '@henriquecosta/react-debug-machine-shared';
@@ -32,7 +32,14 @@ const stop = startReduxCapture(bus, store, 'root'); // label default: 'store'
 stop(); // cancela o subscribe do store
 ```
 
-Publica a cada `dispatch` que muda o state (`store.subscribe`), com `before`/`after` sendo o state inteiro da store (não há diff por slice nesta primeira versão — ver limitações).
+Publica a cada `dispatch` que muda o state (`store.subscribe`), com `before`/`after` sendo o state inteiro da store por padrão.
+
+Passando `sliceKeys` (chaves top-level de um state `combineReducers`), publica 1 evento por chave que mudou em vez de 1 evento com o state inteiro — `label` vira `<label>.<chave>` e `before`/`after` são só aquela chave. Chave que não mudou (`Object.is`) não publica nada. O adapter não infere as chaves sozinho (não há como saber, a partir da `Store`, quais chaves vieram de `combineReducers` vs. de um reducer único que devolve um objeto — ver ADR-004): quem sabe é o chamador.
+
+```ts
+const stop = startReduxCapture(bus, store, 'root', ['counter', 'user']);
+// dispatch que só muda `counter` publica 1 evento: label 'root.counter'
+```
 
 ### `startTanstackCapture(bus, queryClient)`
 
@@ -65,7 +72,7 @@ Retorna um hook com a mesma assinatura de `useState` (+ `label` obrigatório pra
 
 | Adapter | Limitação |
 |---|---|
-| `redux` | Diff é do state inteiro, não por slice; não captura o `type` da action (exigiria middleware/enhancer, fora de escopo desta versão) |
+| `redux` | Diff por slice é opt-in via `sliceKeys` (chamador declara as chaves, adapter não infere); sem `sliceKeys`, diff é do state inteiro. Não captura o `type` da action em nenhum dos dois modos (exigiria middleware/enhancer, contradiz a premissa do PRD R-02 de não exigir middleware — fora de escopo) |
 | `tanstack` | `before`/`after` são o `query.state` interno (inclui `status`, `fetchStatus` etc.), não só `data` |
 | `react` | Opt-in: só captura state trocado por `useDebugState`; não enxerga `useState`/`useReducer` que a app não migrar |
 
@@ -86,7 +93,7 @@ Retorna um hook com a mesma assinatura de `useState` (+ `label` obrigatório pra
 pnpm test
 ```
 
-7 testes (Rstest + jsdom) em `src/tests/`: `redux.adapter` (diff before/after no dispatch, label default, restore no stop), `tanstack.adapter` (before undefined na 1ª transição, before = state anterior na 2ª, restore no stop), `react.adapter` (`useDebugState` publica before/after e se comporta como `useState`, via `react-dom/client` + `act` em jsdom).
+9 testes (Rstest + jsdom) em `src/tests/`: `redux.adapter` (diff before/after no dispatch, label default, restore no stop, diff por slice via `sliceKeys` — só publica a chave que mudou, nada se nenhuma mudou), `tanstack.adapter` (before undefined na 1ª transição, before = state anterior na 2ª, restore no stop), `react.adapter` (`useDebugState` publica before/after e se comporta como `useState`, via `react-dom/client` + `act` em jsdom).
 
 ---
 
