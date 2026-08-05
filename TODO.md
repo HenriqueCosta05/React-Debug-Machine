@@ -4,7 +4,7 @@ Live backlog. Itens concluídos migram pra "Concluído" com check, não são rem
 
 ## Now
 
-- [ ] M4 — Implementar adapter `console`: interceptação de console.* sem suprimir comportamento original (R-03; só captura, sem replay)
+- [x] M4 — Implementar adapter `console`: interceptação de console.* sem suprimir comportamento original (R-03; só captura, sem replay)
 - [ ] M5 — Implementar adapter `types`: diagnostics do TS Language Service ligados ao componente/estado de origem (R-05; bloqueado até validação de viabilidade acima)
 - [ ] M6 — Implementar painel `devtools` unificando os 5 domínios (DOM, estado, console, rede, tipos) com uma UI anexada à aplicação hospedeira via Browser Window. Opcional, deverá ser um novo pacote.
 

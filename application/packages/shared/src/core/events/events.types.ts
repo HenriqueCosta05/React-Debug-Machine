@@ -47,10 +47,17 @@ export type StateEventData = {
     after: unknown;
 };
 
+export type ConsoleLevel = 'log' | 'warn' | 'error' | 'info' | 'debug';
+
+export type ConsoleEventData = {
+    level: ConsoleLevel;
+    args: readonly unknown[];
+};
+
 export type DebugEvent =
     | { type: 'dom'; data: DomEventData; timestamp: number }
     | { type: 'network'; data: NetworkEventData; timestamp: number }
-    | { type: 'console'; data: unknown; timestamp: number }
+    | { type: 'console'; data: ConsoleEventData; timestamp: number }
     | { type: 'state'; data: StateEventData; timestamp: number }
     | { type: 'typescript'; data: unknown; timestamp: number }
     | { type: 'custom'; data: unknown; timestamp: number };

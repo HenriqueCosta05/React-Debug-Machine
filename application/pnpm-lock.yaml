@@ -126,6 +126,46 @@ importers:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@24.13.3)(jsdom@29.1.1)(vite@8.2.0(@types/node@24.13.3)(jiti@2.7.0)(yaml@2.9.0))
 
+  packages/console:
+    dependencies:
+      '@henriquecosta/react-debug-machine-shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      '@eslint/css':
+        specifier: ^1.4.0
+        version: 1.4.0
+      '@eslint/js':
+        specifier: ^10.0.1
+        version: 10.0.1(eslint@10.8.0(jiti@2.7.0))
+      '@eslint/markdown':
+        specifier: ^8.0.3
+        version: 8.0.3
+      '@rsbuild/core':
+        specifier: ^2.1.8
+        version: 2.1.8
+      '@rslib/core':
+        specifier: ^0.23.2
+        version: 0.23.2(typescript@6.0.3)
+      '@rstest/core':
+        specifier: ^0.11.5
+        version: 0.11.5(jsdom@29.1.1)
+      '@rstest/coverage-v8':
+        specifier: ^0.11.5
+        version: 0.11.5(@rstest/core@0.11.5(jsdom@29.1.1))
+      eslint:
+        specifier: ^10.8.0
+        version: 10.8.0(jiti@2.7.0)
+      globals:
+        specifier: ^17.7.0
+        version: 17.8.0
+      jiti:
+        specifier: ^2.7.0
+        version: 2.7.0
+      typescript-eslint:
+        specifier: ^8.65.0
+        version: 8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3)
+
   packages/dom:
     dependencies:
       '@henriquecosta/react-debug-machine-shared':
@@ -4078,10 +4118,31 @@ snapshots:
       - '@module-federation/runtime-tools'
       - core-js
 
+  '@rstest/core@0.11.5(jsdom@29.1.1)':
+    dependencies:
+      '@rsbuild/core': 2.1.8
+      '@types/chai': 5.2.3
+    optionalDependencies:
+      jsdom: 29.1.1
+    transitivePeerDependencies:
+      - '@module-federation/runtime-tools'
+      - core-js
+
   '@rstest/coverage-v8@0.11.5(@rstest/core@0.11.5(jsdom@25.0.1))':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       '@rstest/core': 0.11.5(jsdom@25.0.1)
+      istanbul-lib-coverage: 3.2.2
+      istanbul-lib-report: 3.0.1
+      istanbul-reports: 3.2.0
+      picomatch: 4.0.5
+      yuku-ast: 0.8.1
+      yuku-parser: 0.8.1
+
+  '@rstest/coverage-v8@0.11.5(@rstest/core@0.11.5(jsdom@29.1.1))':
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.31
+      '@rstest/core': 0.11.5(jsdom@29.1.1)
       istanbul-lib-coverage: 3.2.2
       istanbul-lib-report: 3.0.1
       istanbul-reports: 3.2.0

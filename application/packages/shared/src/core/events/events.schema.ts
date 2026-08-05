@@ -1,4 +1,4 @@
-import { DebugEvent, DomEventData, DomTargetDescriptor, NetworkEventData, StateEventData } from "./events.types";
+import { ConsoleEventData, DebugEvent, DomEventData, DomTargetDescriptor, NetworkEventData, StateEventData } from "./events.types";
 
 const EVENT_TYPES: ReadonlySet<DebugEvent['type']> = new Set([
     'dom', 'network', 'console', 'state', 'typescript', 'custom',
@@ -6,6 +6,7 @@ const EVENT_TYPES: ReadonlySet<DebugEvent['type']> = new Set([
 
 const NETWORK_PHASES = new Set(['request', 'response', 'error']);
 const STATE_ORIGINS = new Set(['react', 'redux', 'tanstack']);
+const CONSOLE_LEVELS = new Set(['log', 'warn', 'error', 'info', 'debug']);
 
 function isDomTargetDescriptor(value: unknown): value is DomTargetDescriptor {
     if (typeof value !== 'object' || value === null) return false;
@@ -44,6 +45,12 @@ function isStateEventData(value: unknown): value is StateEventData {
     );
 }
 
+function isConsoleEventData(value: unknown): value is ConsoleEventData {
+    if (typeof value !== 'object' || value === null) return false;
+    const v = value as Record<string, unknown>;
+    return typeof v.level === 'string' && CONSOLE_LEVELS.has(v.level) && Array.isArray(v.args);
+}
+
 export function isDebugEvent(value: unknown): value is DebugEvent {
     if (typeof value !== 'object' || value === null) return false;
     const v = value as Record<string, unknown>;
@@ -52,5 +59,6 @@ export function isDebugEvent(value: unknown): value is DebugEvent {
     if (v.type === 'dom') return isDomEventData(v.data);
     if (v.type === 'network') return isNetworkEventData(v.data);
     if (v.type === 'state') return isStateEventData(v.data);
+    if (v.type === 'console') return isConsoleEventData(v.data);
     return true;
 }

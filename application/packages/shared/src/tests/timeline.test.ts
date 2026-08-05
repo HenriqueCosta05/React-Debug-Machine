@@ -3,7 +3,7 @@ import { createEventBus } from '../core/events/events.bus';
 import { createTimeline } from '../core/timeline/timeline';
 import { DebugEvent } from '../core/events/events.types';
 
-const consoleEvent: DebugEvent = { type: 'console', timestamp: 1, data: 'log line' };
+const consoleEvent: DebugEvent = { type: 'console', timestamp: 1, data: { level: 'log', args: ['log line'] } };
 const domEvent: DebugEvent = {
     type: 'dom',
     timestamp: 2,

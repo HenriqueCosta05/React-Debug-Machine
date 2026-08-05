@@ -2,7 +2,7 @@ import { describe, expect, it, rstest } from '@rstest/core';
 import { createEventBus } from '../core/events/events.bus';
 import { DebugEvent } from '../core/events/events.types';
 
-const consoleEvent: DebugEvent = { type: 'console', timestamp: 1, data: 'log line' };
+const consoleEvent: DebugEvent = { type: 'console', timestamp: 1, data: { level: 'log', args: ['log line'] } };
 const networkEvent: DebugEvent = {
     type: 'network',
     timestamp: 2,
