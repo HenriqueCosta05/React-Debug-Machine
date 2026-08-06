@@ -1,6 +1,6 @@
 {
   "name": "@henriquecosta/react-debug-machine-state",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "description": "State adapter (React state, Redux, TanStack Query) for React Debug Machine.",
   "type": "module",
   "keywords": [
