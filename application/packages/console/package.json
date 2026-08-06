@@ -1,6 +1,6 @@
 {
   "name": "@henriquecosta/react-debug-machine-console",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Console (log/warn/error/info/debug) capture adapter for React Debug Machine.",
   "type": "module",
   "keywords": [
