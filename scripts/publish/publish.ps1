@@ -35,7 +35,7 @@ function Get-BumpType {
 function Update-PackageVersion {
     param([string]$PkgJson, [string]$BumpType)
     $env:BUMP_TYPE = $BumpType
-    node -e @"
+    node -e @'
 const fs = require('fs');
 const path = process.argv[1];
 const pkg = JSON.parse(fs.readFileSync(path, 'utf8'));
@@ -46,7 +46,7 @@ else if (bt === 'minor') pkg.version = `${major}.${minor + 1}.0`;
 else                     pkg.version = `${major}.${minor}.${patch + 1}`;
 process.stdout.write('  ' + pkg.name + '@' + pkg.version + '\n');
 fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + '\n');
-"@ $PkgJson
+'@ $PkgJson
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 }
 

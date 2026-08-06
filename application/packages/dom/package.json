@@ -1,6 +1,6 @@
 {
   "name": "@henriquecosta/react-debug-machine-dom",
-  "version": "2.0.0",
+  "version": "2.2.0",
   "description": "DOM event capture and replay adapter for React Debug Machine.",
   "type": "module",
   "keywords": [

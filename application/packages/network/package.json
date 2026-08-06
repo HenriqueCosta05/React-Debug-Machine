@@ -1,6 +1,6 @@
 {
   "name": "@henriquecosta/react-debug-machine-network",
-  "version": "2.0.0",
+  "version": "2.2.0",
   "description": "Network (fetch + XHR) capture and replay adapter for React Debug Machine.",
   "type": "module",
   "keywords": [
