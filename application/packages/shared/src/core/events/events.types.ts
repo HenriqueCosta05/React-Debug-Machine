@@ -54,10 +54,21 @@ export type ConsoleEventData = {
     args: readonly unknown[];
 };
 
+export type TsDiagnosticSeverity = 'error' | 'warning' | 'suggestion' | 'message';
+
+export type TypesEventData = {
+    severity: TsDiagnosticSeverity;
+    code: number;
+    message: string;
+    file?: string;
+    line?: number;
+    column?: number;
+};
+
 export type DebugEvent =
     | { type: 'dom'; data: DomEventData; timestamp: number }
     | { type: 'network'; data: NetworkEventData; timestamp: number }
     | { type: 'console'; data: ConsoleEventData; timestamp: number }
     | { type: 'state'; data: StateEventData; timestamp: number }
-    | { type: 'typescript'; data: unknown; timestamp: number }
+    | { type: 'typescript'; data: TypesEventData; timestamp: number }
     | { type: 'custom'; data: unknown; timestamp: number };

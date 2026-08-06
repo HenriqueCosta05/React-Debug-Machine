@@ -227,7 +227,7 @@ flowchart LR
 | ID | Decisão | Status | Data |
 |---|---|---|---|
 | ADR-001 | Split de pacotes por feature (um pacote por capacidade) em vez de monólito ou split por record/replay | aceita | 2026-07-23 |
-| ADR-002 | Como o TS Language Service roda no browser para viabilizar `types` (R-05) | proposta | — |
+| ADR-002 | TS Language Service não roda no browser (RK-02 confirmado: custo/latência inviáveis). Adapter `types` funciona como receptor: ouve CustomEvent `react-debug-machine:typescript-diagnostic` despachado por tooling externo (plugins de build, watchers, extensões de IDE) e os publica no bus. API direta via `publishTypeDiagnostic(bus, data)` para injeção programática. | aceita | 2026-08-06 |
 | ADR-003 | Modelo de timeline/sessão implementado em `shared` (`createTimeline`, `createDebugSession`) desde o M1/M2, mesmo sem `devtools` (M6) ainda existir: `createTimeline(bus)` só acumula `DebugEvent` em ordem com `sequence`, sem seek/scrubbing (isso fica pra `devtools`); assinatura de adapters (`startXCapture(bus)`) não muda, `Session` é aditivo | aceita | 2026-08-02 |
 | ADR-004 | Adapter `state` (M3) captura React via hook opt-in (`useDebugState`, wrapper de `useState`) em vez de introspecção de fiber, evitando o risco de RK-01 (internals não-documentados, shape muda entre versões); Redux e TanStack usam suas APIs públicas de subscribe/getState | aceita | 2026-08-02 |
 
