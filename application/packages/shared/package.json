@@ -1,6 +1,6 @@
 {
   "name": "@henriquecosta/react-debug-machine-shared",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Shared utilities for react debug machine npm package. This includes event schemas and event bus.",
   "type": "module",
   "keywords": [
