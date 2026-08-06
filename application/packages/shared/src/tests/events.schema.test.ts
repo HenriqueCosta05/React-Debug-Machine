@@ -22,8 +22,18 @@ describe('isDebugEvent', () => {
     });
 
     it('aceita domínios ainda não tipados (data unknown) desde que tenham type/timestamp válidos', () => {
-        expect(isDebugEvent({ type: 'console', timestamp: 1, data: 'log line' })).toBe(true);
         expect(isDebugEvent({ type: 'typescript', timestamp: 1, data: { anything: true } })).toBe(true);
+    });
+
+    it('aceita evento console com level e args válidos', () => {
+        expect(isDebugEvent({ type: 'console', timestamp: 1, data: { level: 'log', args: ['msg', 42] } })).toBe(true);
+        expect(isDebugEvent({ type: 'console', timestamp: 1, data: { level: 'error', args: [] } })).toBe(true);
+    });
+
+    it('rejeita evento console com level inválido ou args ausente', () => {
+        expect(isDebugEvent({ type: 'console', timestamp: 1, data: 'log line' })).toBe(false);
+        expect(isDebugEvent({ type: 'console', timestamp: 1, data: { level: 'verbose', args: [] } })).toBe(false);
+        expect(isDebugEvent({ type: 'console', timestamp: 1, data: { level: 'log' } })).toBe(false);
     });
 
     it('aceita evento state com origin/label/before/after', () => {

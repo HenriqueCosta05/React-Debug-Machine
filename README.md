@@ -1,4 +1,4 @@
-# react-debug-machine
+# React Debug Machine
 
 > Debugger runtime unificado para React: eventos de DOM, estado, logs, rede e tipagem num só painel.
 
@@ -69,15 +69,18 @@ Nenhum serviço externo é necessário — ferramenta 100% client-side.
 
 ```bash
 # 1. Clonar
-git clone <url-do-repositorio>
+git clone https://github.com/HenriqueCosta05/React-Debug-Machine
 cd react-debug-machine
 
-# 2. Instalar dependências
-cd application
-pnpm install
+# 2. Bootstrap facilitado (Script Local)
 
-# 3. Rodar em modo desenvolvimento
-pnpm dev
+# Powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+pwsh "./scripts/bootstrap/bootstrap.ps1"
+
+# Unix Shell
+"./scripts/bootstrap/bootstrap.sh"
+
 ```
 
 ---
@@ -131,17 +134,5 @@ exigem um browser real (captura/replay ponta-a-ponta). Detalhes em
 
 ---
 
-## Licença
-
-A definir.
-
----
-
-## Contato / mantenedores
-
-- Henrique Costa — henrique.b.costa9090@gmail.com
-
----
-
-<sub>Última revisão: 2026-07-23 · Mantenha este README em sincronia com o
+<sub>Última revisão: 2026-07-02 · Mantenha este README em sincronia com o
 código: mudanças em build, execução ou testes exigem atualização no mesmo PR.</sub>

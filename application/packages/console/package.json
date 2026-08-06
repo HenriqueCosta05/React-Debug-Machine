@@ -1,7 +1,7 @@
 {
-  "name": "@henriquecosta/react-debug-machine-state",
+  "name": "@henriquecosta/react-debug-machine-console",
   "version": "2.3.0",
-  "description": "State adapter (React state, Redux, TanStack Query) for React Debug Machine.",
+  "description": "Console (log/warn/error/info/debug) capture adapter for React Debug Machine.",
   "type": "module",
   "keywords": [
     "npm",
@@ -9,9 +9,7 @@
     "debug",
     "timemachine",
     "devtools",
-    "state",
-    "redux",
-    "tanstack"
+    "console"
   ],
   "homepage": "https://github.com/HenriqueCosta05/React-Debug-Machine#readme",
   "bugs": {
@@ -35,22 +33,6 @@
   "dependencies": {
     "@henriquecosta/react-debug-machine-shared": "workspace:*"
   },
-  "peerDependencies": {
-    "@tanstack/query-core": "^5.0.0",
-    "react": "^18.0.0 || ^19.0.0",
-    "redux": "^5.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@tanstack/query-core": {
-      "optional": true
-    },
-    "react": {
-      "optional": true
-    },
-    "redux": {
-      "optional": true
-    }
-  },
   "devDependencies": {
     "@eslint/css": "^1.4.0",
     "@eslint/js": "^10.0.1",
@@ -59,16 +41,9 @@
     "@rslib/core": "^0.23.2",
     "@rstest/core": "^0.11.5",
     "@rstest/coverage-v8": "^0.11.5",
-    "@tanstack/query-core": "^5.62.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
     "eslint": "^10.8.0",
     "globals": "^17.7.0",
     "jiti": "^2.7.0",
-    "jsdom": "^25.0.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "redux": "^5.0.1",
     "typescript-eslint": "^8.65.0"
   }
 }

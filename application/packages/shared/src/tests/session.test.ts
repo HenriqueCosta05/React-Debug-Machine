@@ -13,7 +13,7 @@ describe('createDebugSession', () => {
     it('bus e timeline da sessão ficam ligados: publish reflete em getEvents', () => {
         const { bus, timeline } = createDebugSession();
 
-        bus.publish({ type: 'console', timestamp: 1, data: 'log line' });
+        bus.publish({ type: 'console', timestamp: 1, data: { level: 'log', args: ['log line'] } });
 
         expect(timeline.getEvents()).toHaveLength(1);
     });
@@ -22,7 +22,7 @@ describe('createDebugSession', () => {
         const { bus, timeline, end } = createDebugSession();
 
         end();
-        bus.publish({ type: 'console', timestamp: 1, data: 'log line' });
+        bus.publish({ type: 'console', timestamp: 1, data: { level: 'log', args: ['log line'] } });
 
         expect(timeline.getEvents()).toEqual([]);
     });
@@ -31,7 +31,7 @@ describe('createDebugSession', () => {
         const a = createDebugSession();
         const b = createDebugSession();
 
-        a.bus.publish({ type: 'console', timestamp: 1, data: 'a' });
+        a.bus.publish({ type: 'console', timestamp: 1, data: { level: 'log', args: ['a'] } });
 
         expect(a.timeline.getEvents()).toHaveLength(1);
         expect(b.timeline.getEvents()).toHaveLength(0);
