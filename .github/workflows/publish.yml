@@ -36,6 +36,9 @@ jobs:
       - name: Lint
         run: pnpm run lint
 
+      - name: Build shared
+        run: pnpm --filter @henriquecosta/react-debug-machine-shared exec rslib build
+
       - name: Test
         run: pnpm run test
 
