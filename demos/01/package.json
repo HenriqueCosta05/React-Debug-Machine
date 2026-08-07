@@ -1,0 +1,33 @@
+{
+  "name": "01",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rsbuild build",
+    "dev": "rsbuild --open",
+    "preview": "rsbuild preview"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@henriquecosta/react-debug-machine-console": "^4.0.1",
+    "@henriquecosta/react-debug-machine-devtools": "^4.0.1",
+    "@henriquecosta/react-debug-machine-dom": "^4.0.1",
+    "@henriquecosta/react-debug-machine-network": "^4.0.1",
+    "@henriquecosta/react-debug-machine-shared": "^4.0.1",
+    "@henriquecosta/react-debug-machine-state": "^4.0.1",
+    "@mui/material": "^6.4.8",
+    "@tanstack/react-query": "^5.101.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^2.1.10",
+    "@rsbuild/plugin-react": "^2.1.0",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "typescript": "^6.0.3"
+  }
+}

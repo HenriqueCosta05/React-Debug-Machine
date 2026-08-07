@@ -12,7 +12,7 @@ export function createTimeline(bus: EventBus) {
     });
 
     function getEvents(): readonly TimelineEntry[] {
-        return entries;
+        return [...entries];
     }
 
     function getEventsByType(type: DebugEvent['type']): readonly TimelineEntry[] {

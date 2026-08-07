@@ -6,8 +6,8 @@
 | **Versão** | v2.0 |
 | **Autor / Owner** | Henrique Costa |
 | **Revisores** | Henrique Costa |
-| **Última atualização** | 2026-07-24 |
-| **Release alvo** | 2026-07-31 |
+| **Última atualização** | 2026-08-06 |
+| **Release alvo** | 2026-08-06 (M1–M6 concluídos) |
 | **Links rápidos** | [Repo](https://github.com/HenriqueCosta05/React-Debug-Machine) · [Design](../docs/DESIGN.md) · [Board](../TODO.md)|
 
 > Este é um documento vivo. Atualize junto com as decisões, não depois.
@@ -63,6 +63,7 @@ Uma camada de instrumentação client-side com um adapter por capacidade (DOM, e
 |---|---|---|---|---|
 | v0.1 | 2026-07-23 | Henrique Costa | Criação do documento | Escopo inicial do projeto "React Debug Machine", reiniciado do zero |
 | v1.0 | 2026-07-24 | Henrique Costa | Atualização do documento | Atualizações de escopo e linguagem do PRD |
+| v2.0 | 2026-08-06 | Henrique Costa | Todos os milestones concluídos; Q-03 resolvido (ADR-002); datas de entrega reais registradas | M6 e M5 entregues; viabilidade do TS Language Service confirmada como inviável no browser |
 
 **Convenção de versionamento**
 - `v0.x`: rascunho, ainda em discussão
@@ -121,14 +122,14 @@ Uma camada de instrumentação client-side com um adapter por capacidade (DOM, e
 | Dependência | TypeScript Language Service rodando no contexto do browser (viabilidade a validar) | Engenharia | R-05 pode não ser viável como especificado; maior risco técnico do escopo |
 
 ### 3.6 Entregas e marcos
-| Marco | Entregável | Data alvo | Responsável |
-|---|---|---|---|
-| M1 | `shared` (schema de eventos + event bus) | a definir | Henrique Costa |
-| M2 | Adapters `dom` e `network` (maior precedente técnico) | a definir | Henrique Costa |
-| M3 | Adapter `state` (React + Redux + TanStack) | a definir | Henrique Costa |
-| M4 | Adapter `console` | a definir | Henrique Costa |
-| M5 | Adapter `types` (validar viabilidade do Language Service primeiro) | a definir | Henrique Costa |
-| M6 | Painel `devtools` unificando os 5 domínios | a definir | Henrique Costa |
+| Marco | Entregável | Data alvo | Responsável | Status |
+|---|---|---|---|---|
+| M1 | `shared` (schema de eventos + event bus) | 2026-07-23 | Henrique Costa | ✅ Concluído |
+| M2 | Adapters `dom` e `network` (maior precedente técnico) | 2026-07-29 | Henrique Costa | ✅ Concluído |
+| M3 | Adapter `state` (React + Redux + TanStack) | 2026-07-31 | Henrique Costa | ✅ Concluído |
+| M4 | Adapter `console` | 2026-08-04 | Henrique Costa | ✅ Concluído |
+| M5 | Adapter `types` (receptor de CustomEvent, ADR-002) | 2026-08-06 | Henrique Costa | ✅ Concluído |
+| M6 | Painel `devtools` unificando os 5 domínios | 2026-08-06 | Henrique Costa | ✅ Concluído |
 
 ---
 
@@ -146,7 +147,7 @@ Uma camada de instrumentação client-side com um adapter por capacidade (DOM, e
 |---|---|---|---|---|---|
 | Q-01 | Qual scope npm definitivo para os pacotes renomeados? | Sim | Henrique Costa | antes do M1 | `@henriquecosta`, formato `react-debug-machine-<pacote>` — já em uso por `shared`/`dom`/`network` |
 | Q-02 | Metas concretas de overhead de runtime e bundle size | Não | Henrique Costa | antes do v1.0 | — |
-| Q-03 | Viabilidade técnica do TS Language Service no browser | Sim (para R-05/M5) | Henrique Costa | antes do M5 | — |
+| Q-03 | Viabilidade técnica do TS Language Service no browser | Sim (para R-05/M5) | Henrique Costa | antes do M5 | Inviável (custo/latência). ADR-002 aceito 2026-08-06: adapter `types` funciona como receptor de CustomEvent externo. R-05 implementado via `publishTypeDiagnostic` e `startTypesCapture`. |
 
 **Trade-offs assumidos**
 - Um pacote por feature em vez de um monólito. Escolhido para permitir instalação seletiva (tree-shaking real); custo aceito: mais overhead de manutenção entre pacotes (versionamento, publish).

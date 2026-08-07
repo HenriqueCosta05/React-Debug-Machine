@@ -113,7 +113,7 @@ describe('useDebugMachine', () => {
 
         act(() => { publishDomEvent(session1); });
 
-        let currentSession = session1;
+        const currentSession = session1;
         let result: readonly TimelineEntry[] = [];
         let setSession: (s: DebugSession) => void = () => {};
 

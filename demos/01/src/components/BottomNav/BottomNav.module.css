@@ -1,0 +1,31 @@
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 0 20px;
+}
+
+.item {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: transparent;
+  border: none;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+
+.item:hover {
+  color: #EDEBEB;
+  background: #1A1A1C;
+}
+
+.active {
+  color: #EDEBEB;
+  background: #1A1A1C;
+}

@@ -1,0 +1,75 @@
+.card {
+  background: #161618;
+  border-radius: 16px;
+  padding: 18px;
+  border: 1px solid #222226;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 13px;
+  color: #888;
+  font-weight: 500;
+}
+
+.filters {
+  display: flex;
+  gap: 2px;
+  background: #0D0D0E;
+  border-radius: 20px;
+  padding: 3px;
+}
+
+.filter {
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+
+.filter:hover {
+  color: #EDEBEB;
+}
+
+.filterActive {
+  background: #EDEBEB;
+  color: #0D0D0E;
+}
+
+.filterActive:hover {
+  color: #0D0D0E;
+}
+
+.chart {
+  width: 100%;
+  flex: 1;
+  min-height: 100px;
+}
+
+.skeleton {
+  flex: 1;
+  min-height: 100px;
+  background: linear-gradient(90deg, #1a1a1c 25%, #222226 50%, #1a1a1c 75%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

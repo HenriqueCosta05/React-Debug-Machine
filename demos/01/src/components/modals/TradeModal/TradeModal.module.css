@@ -1,0 +1,169 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 11px;
+  color: #666;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.input,
+.select {
+  background: #0d0d0e;
+  border: 1px solid #2a2a2e;
+  border-radius: 10px;
+  color: #EDEBEB;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 10px 12px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s;
+  appearance: none;
+}
+
+.input:focus,
+.select:focus {
+  border-color: #555;
+}
+
+.select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.toggle {
+  display: flex;
+  background: #0d0d0e;
+  border: 1px solid #2a2a2e;
+  border-radius: 10px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.toggleBtn {
+  flex: 1;
+  padding: 7px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #666;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-family: inherit;
+}
+
+.toggleBtn[data-active='true'] {
+  background: #222226;
+  color: #EDEBEB;
+}
+
+.toggleBtn[data-active='true'][data-variant='buy'] {
+  background: #1a3d22;
+  color: #25A84A;
+}
+
+.toggleBtn[data-active='true'][data-variant='sell'] {
+  background: #3d1a1a;
+  color: #E57373;
+}
+
+.inputWrap {
+  position: relative;
+}
+
+.prefix {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #555;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.btnBuy,
+.btnSell {
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+  margin-top: 2px;
+}
+
+.btnBuy {
+  background: #25A84A;
+  color: #fff;
+}
+
+.btnSell {
+  background: #E57373;
+  color: #fff;
+}
+
+.btnBuy:disabled,
+.btnSell:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btnPrimary {
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  background: #EDEBEB;
+  color: #0d0d0e;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.error {
+  font-size: 12px;
+  color: #E57373;
+  background: #3d1a1a;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0 4px;
+  text-align: center;
+}
+
+.success p {
+  font-size: 15px;
+  font-weight: 600;
+  color: #EDEBEB;
+}
+
+.successSub {
+  font-size: 11px;
+  color: #555;
+}

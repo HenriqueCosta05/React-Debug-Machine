@@ -1,0 +1,116 @@
+.card {
+  background: #161618;
+  border-radius: 16px;
+  padding: 18px;
+  border: 1px solid #222226;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 13px;
+  color: #888;
+  font-weight: 500;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.viewMore {
+  background: transparent;
+  border: none;
+  color: #555;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.viewMore:hover {
+  color: #EDEBEB;
+}
+
+.arrow {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #1e1e20;
+  border: 1px solid #2a2a2e;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+
+.arrow:hover {
+  color: #EDEBEB;
+  background: #2a2a2e;
+}
+
+.picks {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+  align-items: flex-start;
+}
+
+.pick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  flex: 1;
+  transition: transform 0.15s;
+}
+
+.pick:hover {
+  transform: translateY(-2px);
+}
+
+.logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.ticker {
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+}
+
+.skeleton {
+  flex: 1;
+  height: 72px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #1a1a1c 25%, #222226 50%, #1a1a1c 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

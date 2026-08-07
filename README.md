@@ -45,7 +45,7 @@ API e diagnósticos de tipagem TypeScript.
 | Linguagem | TypeScript | 5.x |
 | Framework (peer) | React | 18.x / 19.x |
 | Gerenciador de pacotes | pnpm | — |
-| Testes | Vitest + Playwright | — |
+| Testes | Rstest + Playwright | — |
 
 > Decisões de arquitetura e o "porquê" de cada escolha ficam em
 > [docs/CONVENTIONS.md](docs/CONVENTIONS.md).
@@ -63,9 +63,9 @@ Nenhum serviço externo é necessário — ferramenta 100% client-side.
 
 ## Quick start
 
-> `application/` já é um workspace `pnpm` funcional (`shared`, `dom`,
-> `network` e `state` buildam e testam com Rstest). Os demais pacotes
-> (`console`, `types`, `devtools`) ainda estão vazios — ver [TODO.md](TODO.md).
+> `application/` é um workspace `pnpm` funcional. Todos os pacotes
+> (`shared`, `dom`, `network`, `state`, `console`, `types`, `devtools`)
+> buildam e testam com Rstest. Todos os milestones M1–M6 estão concluídos.
 
 ```bash
 # 1. Clonar
@@ -116,7 +116,7 @@ Detalhes do layout de `application/` (pacotes por feature, apps de demo) em
 pnpm test
 ```
 
-Vitest para lógica isolada de cada adapter; Playwright para cenários que
+Rstest para lógica isolada de cada adapter; Playwright para cenários que
 exigem um browser real (captura/replay ponta-a-ponta). Detalhes em
 [docs/CONVENTIONS.md §2.5](docs/CONVENTIONS.md).
 
@@ -134,5 +134,5 @@ exigem um browser real (captura/replay ponta-a-ponta). Detalhes em
 
 ---
 
-<sub>Última revisão: 2026-07-02 · Mantenha este README em sincronia com o
+<sub>Última revisão: 2026-08-06 · Mantenha este README em sincronia com o
 código: mudanças em build, execução ou testes exigem atualização no mesmo PR.</sub>

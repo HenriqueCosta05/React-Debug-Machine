@@ -4,7 +4,7 @@
 |---|---|
 | Projeto | React Debug Machine |
 | Versão do documento | 2.0 |
-| Última atualização | 2026-08-02 |
+| Última atualização | 2026-08-06 |
 | Responsável | Henrique Costa |
 | Status | `final` |
 
@@ -267,3 +267,4 @@ flowchart LR
 | 2026-07-23 | 1.0 | Versão inicial | Henrique Costa |
 | 2026-07-29 | 1.1 | Runner de teste decidido: Rstest (não Vitest); convenção de localização de testes em `src/tests/` — §1.1 e §2.5 | Henrique Costa |
 | 2026-08-02 | 1.2 | ADR-003 (timeline/sessão em `shared`) e ADR-004 (adapter `state` via hook, não fiber) — §3.6 | Henrique Costa |
+| 2026-08-06 | 1.3 | ADR-002 aceito: adapter `types` como receptor de CustomEvent, sem TS compiler no browser — §3.6; todos os milestones M1–M6 concluídos | Henrique Costa |

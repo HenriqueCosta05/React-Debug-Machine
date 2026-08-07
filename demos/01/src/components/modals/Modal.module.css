@@ -1,0 +1,67 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.dialog {
+  background: #1a1a1c;
+  border: 1px solid #2a2a2e;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 360px;
+  margin: 16px;
+  animation: slideUp 0.18s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 18px 0;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #EDEBEB;
+}
+
+.close {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #222226;
+  border: 1px solid #2a2a2e;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.close:hover {
+  color: #EDEBEB;
+  background: #2a2a2e;
+}
+
+.body {
+  padding: 18px;
+}

@@ -25,7 +25,7 @@ export function startTypesCapture(
         bus.publish({
             type: 'typescript',
             timestamp: performance.now(),
-            data: (event as CustomEvent<unknown>).detail,
+            data: (event as CustomEvent<TypesEventData>).detail,
         });
     }
 

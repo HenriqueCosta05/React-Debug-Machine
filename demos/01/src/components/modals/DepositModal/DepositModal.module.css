@@ -1,0 +1,141 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 11px;
+  color: #666;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.inputWrap {
+  position: relative;
+}
+
+.prefix {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #555;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.input {
+  background: #0d0d0e;
+  border: 1px solid #2a2a2e;
+  border-radius: 10px;
+  color: #EDEBEB;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 10px 12px 10px 28px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input:focus {
+  border-color: #555;
+}
+
+.methods {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.methodBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0d0d0e;
+  border: 1px solid #2a2a2e;
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s;
+  text-align: left;
+}
+
+.methodBtn[data-active='true'] {
+  border-color: #EDEBEB;
+}
+
+.methodLabel {
+  font-size: 13px;
+  color: #EDEBEB;
+  font-weight: 500;
+}
+
+.methodSub {
+  font-size: 11px;
+  color: #555;
+}
+
+.btnPrimary {
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  background: #EDEBEB;
+  color: #0d0d0e;
+  width: 100%;
+  margin-top: 2px;
+  transition: opacity 0.15s;
+}
+
+.btnPrimary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.warning {
+  font-size: 12px;
+  color: #FCF746;
+  background: #2a2900;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.error {
+  font-size: 12px;
+  color: #E57373;
+  background: #3d1a1a;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0 4px;
+  text-align: center;
+}
+
+.success p {
+  font-size: 15px;
+  font-weight: 600;
+  color: #EDEBEB;
+}
+
+.successSub {
+  font-size: 11px;
+  color: #555;
+}
