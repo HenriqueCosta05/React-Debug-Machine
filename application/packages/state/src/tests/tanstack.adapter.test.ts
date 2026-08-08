@@ -2,6 +2,7 @@ import { describe, expect, it, rstest } from '@rstest/core';
 import { QueryClient } from '@tanstack/query-core';
 import { createEventBus } from '@henriquecosta/react-debug-machine-shared';
 import { startTanstackCapture } from '../core/adapters/tanstack.adapter';
+import { createStateSetterRegistry } from '../core/registry/setter-registry';
 
 describe('startTanstackCapture', () => {
     it('publica before undefined na primeira transição e after com os dados carregados', async () => {
@@ -49,5 +50,21 @@ describe('startTanstackCapture', () => {
         await queryClient.fetchQuery({ queryKey: ['todos'], queryFn: () => Promise.resolve(['a']) });
 
         expect(handler).not.toHaveBeenCalled();
+    });
+
+    it('com registry: registra setter que reaplica data via setQueryData', async () => {
+        const bus = createEventBus();
+        const queryClient = new QueryClient();
+        const registry = createStateSetterRegistry();
+
+        startTanstackCapture(bus, queryClient, registry);
+        await queryClient.fetchQuery({ queryKey: ['todos'], queryFn: () => Promise.resolve(['a']) });
+
+        const label = JSON.stringify(['todos']);
+        const setter = registry.get(label);
+        expect(setter).toBeDefined();
+
+        setter?.({ data: ['replayed'] });
+        expect(queryClient.getQueryData(['todos'])).toEqual(['replayed']);
     });
 });

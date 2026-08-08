@@ -3,11 +3,11 @@
 | Campo | Valor |
 |---|---|
 | **Status** | `Revisado` |
-| **Versão** | v2.0 |
+| **Versão** | v2.1 |
 | **Autor / Owner** | Henrique Costa |
 | **Revisores** | Henrique Costa |
-| **Última atualização** | 2026-08-06 |
-| **Release alvo** | 2026-08-06 (M1–M6 concluídos) |
+| **Última atualização** | 2026-08-07 |
+| **Release alvo** | 2026-08-07 (M1–M7 concluídos) |
 | **Links rápidos** | [Repo](https://github.com/HenriqueCosta05/React-Debug-Machine) · [Design](../docs/DESIGN.md) · [Board](../TODO.md)|
 
 > Este é um documento vivo. Atualize junto com as decisões, não depois.
@@ -64,6 +64,7 @@ Uma camada de instrumentação client-side com um adapter por capacidade (DOM, e
 | v0.1 | 2026-07-23 | Henrique Costa | Criação do documento | Escopo inicial do projeto "React Debug Machine", reiniciado do zero |
 | v1.0 | 2026-07-24 | Henrique Costa | Atualização do documento | Atualizações de escopo e linguagem do PRD |
 | v2.0 | 2026-08-06 | Henrique Costa | Todos os milestones concluídos; Q-03 resolvido (ADR-002); datas de entrega reais registradas | M6 e M5 entregues; viabilidade do TS Language Service confirmada como inviável no browser |
+| v2.1 | 2026-08-07 | Henrique Costa | M7 entregue: pacote `recorder` + replay em todos os adapters; risco RK-05 registrado (replay de rede não-GET pode duplicar efeito colateral real) | Nova capacidade de record/replay de sessão, fora do escopo original M1–M6 |
 
 **Convenção de versionamento**
 - `v0.x`: rascunho, ainda em discussão
@@ -130,6 +131,7 @@ Uma camada de instrumentação client-side com um adapter por capacidade (DOM, e
 | M4 | Adapter `console` | 2026-08-04 | Henrique Costa | ✅ Concluído |
 | M5 | Adapter `types` (receptor de CustomEvent, ADR-002) | 2026-08-06 | Henrique Costa | ✅ Concluído |
 | M6 | Painel `devtools` unificando os 5 domínios | 2026-08-06 | Henrique Costa | ✅ Concluído |
+| M7 | Pacote `recorder` (grava janela start/stop, export/import JSON, replay agendado) + replay implementado em `network`/`state`/`console`/`typescript` (só `dom` tinha antes) | 2026-08-07 | Henrique Costa | ✅ Concluído |
 
 ---
 
@@ -141,6 +143,7 @@ Uma camada de instrumentação client-side com um adapter por capacidade (DOM, e
 | RK-02 | Rodar o TS Language Service em runtime no browser pode ser inviável em custo/latência | Técnico | Média | Alto | Prova de conceito isolada antes de comprometer M5 | Redefinir R-05 como diagnóstico estático (build-time) em vez de runtime | Henrique Costa |
 | RK-03 | 7 pacotes é superfície grande para uma primeira versão | Prazo / recurso | Alta | Médio | Fasear entregas por marco (M1–M6), não lançar tudo de uma vez | Cortar `types` do v1 se M5 não for viável a tempo | Henrique Costa |
 | RK-04 | — | Legal / compliance | Baixa | Baixo | Dado que tudo roda local/in-memory, exposição é baixa | — | — |
+| RK-05 | Replay de `network` (M7) reexecuta a request real com só `method`+`url` (sem body/headers capturados); em métodos não-GET pode duplicar um efeito colateral real no backend da app hospedeira | Produto / segurança | Média | Alto | Confirmação explícita obrigatória na UI (`RecorderControls`) antes de reproduzir qualquer evento de rede não-GET — ADR-006 em CONVENTIONS.md | Restringir replay de rede a GET apenas, se o risco se mostrar recorrente em uso real | Henrique Costa |
 
 **Questões em aberto**
 | ID | Pergunta | Bloqueia? | Responsável | Prazo | Resposta / data |

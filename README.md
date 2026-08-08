@@ -35,6 +35,7 @@ API e diagnósticos de tipagem TypeScript.
 - Detecção e debug de logs de console emitidos pela aplicação hospedeira.
 - Detecção de envio/recebimento de requisições e respostas de API.
 - Debug de tipagem via diagnósticos do TypeScript Language Service.
+- Gravação de uma janela da sessão (start/stop), export/import em JSON e replay agendado, com replay real implementado em todos os adapters (`recorder`).
 
 ---
 
@@ -64,8 +65,8 @@ Nenhum serviço externo é necessário — ferramenta 100% client-side.
 ## Quick start
 
 > `application/` é um workspace `pnpm` funcional. Todos os pacotes
-> (`shared`, `dom`, `network`, `state`, `console`, `types`, `devtools`)
-> buildam e testam com Rstest. Todos os milestones M1–M6 estão concluídos.
+> (`shared`, `dom`, `network`, `state`, `console`, `types`, `devtools`, `recorder`)
+> buildam e testam com Rstest. Todos os milestones M1–M7 estão concluídos.
 
 ```bash
 # 1. Clonar
@@ -90,7 +91,8 @@ pwsh "./scripts/bootstrap/bootstrap.ps1"
 ```
 docs/           PRD, convenções, design, changelog
 scripts/        bootstrap e publish (build + dev / release)
-application/    código-fonte (pacotes + apps de demonstração)
+application/    código-fonte (pacotes: shared, dom, network, console, state, types, devtools, recorder)
+demos/01/       app de demonstração (dashboard de trading) consumindo os pacotes publicados
 TODO.md         backlog ativo
 ```
 
@@ -134,5 +136,5 @@ exigem um browser real (captura/replay ponta-a-ponta). Detalhes em
 
 ---
 
-<sub>Última revisão: 2026-08-06 · Mantenha este README em sincronia com o
+<sub>Última revisão: 2026-08-08 · Mantenha este README em sincronia com o
 código: mudanças em build, execução ou testes exigem atualização no mesmo PR.</sub>

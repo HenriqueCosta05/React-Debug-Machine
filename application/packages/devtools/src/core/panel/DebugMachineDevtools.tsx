@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Box, Button, Stack, Tab, Tabs, Typography } from '@mui/material';
 import type { DebugEvent, DebugSession } from '@henriquecosta/react-debug-machine-shared';
+import type { ReplayerRegistry } from '@henriquecosta/react-debug-machine-recorder';
 import { useDebugMachine } from '../hooks/useDebugMachine';
+import { useRecorder } from '../hooks/useRecorder';
 import { EventList } from './EventList';
+import { RecorderControls } from './RecorderControls';
 import { TOKENS } from './tokens';
 
 type TabValue = DebugEvent['type'] | 'all';
@@ -42,12 +45,17 @@ const panelTheme = createTheme({
 
 export interface DebugMachineDevtoolsProps {
     session: DebugSession;
+    // Opcional: sem replayers a app hospedeira ainda grava/exporta/importa, só não
+    // consegue reproduzir eventos de volta. Quem monta o registry sabe quais
+    // adapters/replay fns está usando — devtools não conhece nenhum adapter direto.
+    replayers?: ReplayerRegistry;
 }
 
-export function DebugMachineDevtools({ session }: DebugMachineDevtoolsProps): React.ReactElement {
+export function DebugMachineDevtools({ session, replayers = {} }: DebugMachineDevtoolsProps): React.ReactElement {
     const [open, setOpen] = useState(false);
     const [tab, setTab] = useState<TabValue>('all');
     const { events, clear } = useDebugMachine(session);
+    const recorder = useRecorder(session, replayers);
 
     const filtered = tab === 'all' ? events : events.filter((e) => e.type === tab);
 
@@ -123,6 +131,17 @@ export function DebugMachineDevtools({ session }: DebugMachineDevtoolsProps): Re
                         >
                             React Debug Machine
                         </Typography>
+                        <RecorderControls
+                            status={recorder.status}
+                            recording={recorder.recording}
+                            isPlaying={recorder.isPlaying}
+                            onStart={recorder.start}
+                            onStop={recorder.stop}
+                            onPlay={recorder.play}
+                            onPause={recorder.pause}
+                            onExport={recorder.exportJson}
+                            onImport={recorder.importJson}
+                        />
                         <Button
                             size="small"
                             onClick={clear}

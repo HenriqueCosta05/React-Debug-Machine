@@ -1,6 +1,6 @@
 {
   "name": "@henriquecosta/react-debug-machine-devtools",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "Unified debug panel (DOM, state, console, network, types) for React Debug Machine.",
   "type": "module",
   "keywords": [
@@ -31,7 +31,8 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
-    "@henriquecosta/react-debug-machine-shared": "workspace:*"
+    "@henriquecosta/react-debug-machine-shared": "workspace:*",
+    "@henriquecosta/react-debug-machine-recorder": "workspace:*"
   },
   "peerDependencies": {
     "@emotion/react": "^11.0.0",

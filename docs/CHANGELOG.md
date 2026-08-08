@@ -7,8 +7,16 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Changed
+
+- `demos/01`: dependências bumped pra `^4.1.0` + `@henriquecosta/react-debug-machine-recorder@^0.2.0` adicionado; `App.tsx` monta o `ReplayerRegistry` (dom/network/console/state) e passa `stateRegistry` (`createStateSetterRegistry`) pro `startTanstackCapture`, então os botões Play/Export/Import de `RecorderControls` funcionam de ponta a ponta no dogfood, não só Record/Stop.
+
 ### Added
 
+- `recorder`: pacote novo (M7) — grava a janela entre `start()`/`stop()` (independente da timeline de sessão inteira), `exportRecording`/`importRecording` (JSON plano, valida cada entry com `isDebugEvent` antes de aceitar) e `createPlayer` (agenda replay por delta de timestamp, chama a fn registrada em `ReplayerRegistry` por tipo de evento — tipo sem replayer reporta `no-replayer-registered` em vez de lançar). Agnóstico de adapter: recebe o registry injetado por quem consome (`devtools`), nunca importa `dom`/`network`/etc. diretamente (ADR-005). 11 testes (Rstest).
+- `devtools`: hook `useRecorder(session, replayers)` e componente `RecorderControls` (Record/Stop, Play/Pause, Export/Import) integrados ao painel. Antes de reproduzir um evento de rede não-GET, exige confirmação explícita (ADR-006 — replay de rede reexecuta a request real e pode duplicar efeito colateral).
+- `dom`, `network`, `console`, `state`, `typescript`: todo adapter agora tem uma fn `replayXEvent`, não só `dom`. `network.replayNetworkEvent` reexecuta o `fetch` real com `method`+`url` capturados (não tem body/headers — replay de métodos não-GET é melhor-esforço e arriscado, ver ADR-006). `console.replayConsoleEvent` rechama `console[level]`. `types.replayTypeDiagnostic` é um no-op `ok:true` (diagnóstico não é uma ação reversível). `state` ganhou `createStateSetterRegistry` + `replayStateEvent`: `useDebugState`/`startTanstackCapture` registram seu setter/`setQueryData` por `label`; `redux` não tem API pública de "set state" genérica, então eventos `origin: 'redux'` seguem sem replayer por design.
+- `shared`: `ReplayResult` (`{ok:true} | {ok:false, reason}`) movido de `dom` pra `shared`, contrato único reusado por todo adapter + `recorder`.
 - `devtools`: painel unificado (M6, R-01–R-05). Componente `DebugMachineDevtools` — overlay fixo com toggle, tab bar filtrada por tipo de evento, `EventList`/`EventItem` com diff colorido. Hook `useDebugMachine(session)` expõe events/filter/clear para quem quiser UI própria. Tema MUI isolado (não vaza pra app hospedeira). 2 suítes de teste (Rstest).
 - `types`: adapter receptor de diagnósticos TypeScript (M5, R-05, ADR-002 resolvido). `startTypesCapture(bus)` ouve `CustomEvent react-debug-machine:typescript-diagnostic` despachado por tooling externo (plugins de build, watchers, extensões de IDE). `publishTypeDiagnostic(bus, data)` para injeção direta. TS compiler nunca roda no browser. 1 suíte de teste (Rstest).
 - `console`: adapter de interceptação de `console.*` (M4, R-03). Patcha `console.log/warn/error/debug` sem suprimir o comportamento original, correlaciona cada log com timestamp via `performance.now()`, totalmente reversível via `stop()`. Só captura; sem replay (por design). Testes (Rstest + jsdom).

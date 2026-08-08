@@ -1,6 +1,6 @@
 {
   "name": "@henriquecosta/react-debug-machine-types",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "TypeScript diagnostics capture adapter for React Debug Machine.",
   "type": "module",
   "keywords": [
