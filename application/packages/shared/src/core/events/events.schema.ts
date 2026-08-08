@@ -1,4 +1,4 @@
-import { ConsoleEventData, DebugEvent, DomEventData, DomTargetDescriptor, NetworkEventData, StateEventData, TypesEventData } from "./events.types";
+import { ConsoleEventData, DebugEvent, DomEventData, DomTargetDescriptor, NetworkEventData, StateEventData } from "./events.types";
 
 const EVENT_TYPES: ReadonlySet<DebugEvent['type']> = new Set([
     'dom', 'network', 'console', 'state', 'typescript', 'custom',
@@ -7,7 +7,6 @@ const EVENT_TYPES: ReadonlySet<DebugEvent['type']> = new Set([
 const NETWORK_PHASES = new Set(['request', 'response', 'error']);
 const STATE_ORIGINS = new Set(['react', 'redux', 'tanstack']);
 const CONSOLE_LEVELS = new Set(['log', 'warn', 'error', 'info', 'debug']);
-const TS_SEVERITIES = new Set(['error', 'warning', 'suggestion', 'message']);
 
 function isDomTargetDescriptor(value: unknown): value is DomTargetDescriptor {
     if (typeof value !== 'object' || value === null) return false;
@@ -52,19 +51,6 @@ function isConsoleEventData(value: unknown): value is ConsoleEventData {
     return typeof v.level === 'string' && CONSOLE_LEVELS.has(v.level) && Array.isArray(v.args);
 }
 
-function isTypesEventData(value: unknown): value is TypesEventData {
-    if (typeof value !== 'object' || value === null) return false;
-    const v = value as Record<string, unknown>;
-    return (
-        typeof v.severity === 'string' && TS_SEVERITIES.has(v.severity) &&
-        typeof v.code === 'number' &&
-        typeof v.message === 'string' &&
-        (v.file === undefined || typeof v.file === 'string') &&
-        (v.line === undefined || typeof v.line === 'number') &&
-        (v.column === undefined || typeof v.column === 'number')
-    );
-}
-
 export function isDebugEvent(value: unknown): value is DebugEvent {
     if (typeof value !== 'object' || value === null) return false;
     const v = value as Record<string, unknown>;
@@ -74,6 +60,5 @@ export function isDebugEvent(value: unknown): value is DebugEvent {
     if (v.type === 'network') return isNetworkEventData(v.data);
     if (v.type === 'state') return isStateEventData(v.data);
     if (v.type === 'console') return isConsoleEventData(v.data);
-    if (v.type === 'typescript') return isTypesEventData(v.data);
     return true;
 }
