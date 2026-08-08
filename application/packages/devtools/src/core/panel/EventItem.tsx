@@ -1,73 +1,79 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import type {
-    TimelineEntry,
-    DebugEvent,
-    DomEventData,
-    NetworkEventData,
-    ConsoleEventData,
-    StateEventData,
-    TypesEventData,
-} from '@henriquecosta/react-debug-machine-shared';
-import { TOKENS } from './tokens';
-
-const TYPE_COLORS: Record<DebugEvent['type'], string> = {
-    dom: '#4A90D9',
-    network: '#7B68EE',
-    console: TOKENS.colorWarn,
-    state: TOKENS.colorDiffAdd,
-    typescript: TOKENS.colorError,
-    custom: '#888',
-};
+import type { TimelineEntry } from '@henriquecosta/react-debug-machine-shared';
+import { Badge } from './Badge';
+import { getEventSeverity } from './eventSeverity';
+import { getBadgeTone, renderEventSummary, TYPE_LABEL } from './eventPresentation';
+import { REDUCED_MOTION, TOKENS, TRANSITION } from './tokens';
 
 interface Props {
     entry: TimelineEntry;
+    selected: boolean;
+    onSelect: (sequence: number) => void;
 }
 
-export function EventItem({ entry }: Props): React.ReactElement {
+const SEVERITY_BORDER: Record<'error' | 'warn' | 'normal', string> = {
+    error: TOKENS.colorError,
+    warn: TOKENS.colorWarn,
+    normal: 'transparent',
+};
+
+// Selection uses an inset outline (rather than a real border) so the 2px
+// severity border-left indicator stays visible at the same time — both signals
+// must remain readable together per DESIGN.md "color independence".
+export function EventItem({ entry, selected, onSelect }: Props): React.ReactElement {
+    const severity = getEventSeverity(entry);
+
     return (
         <Box
+            role="option"
+            aria-selected={selected}
+            tabIndex={0}
+            onClick={() => onSelect(entry.sequence)}
+            onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    onSelect(entry.sequence);
+                }
+            }}
             sx={{
                 display: 'flex',
                 alignItems: 'baseline',
-                gap: '8px',
-                px: '12px',
-                py: '4px',
-                borderBottom: '1px solid #1e2a33',
-                fontSize: 13,
+                gap: `${TOKENS.space2}px`,
+                minHeight: 28,
+                px: `${TOKENS.space2}px`,
+                py: `${TOKENS.space1}px`,
+                borderBottom: `1px solid ${TOKENS.colorBorder}`,
+                borderLeft: `2px solid ${SEVERITY_BORDER[severity]}`,
+                fontSize: TOKENS.fontSizeBodyCompact,
                 fontFamily: TOKENS.fontFamily,
-                color: '#c8d6df',
-                '&:hover': { bgcolor: '#162535' },
+                color: TOKENS.colorTextSecondary,
+                cursor: 'pointer',
+                bgcolor: selected ? TOKENS.colorPrimary : 'transparent',
+                boxShadow: selected ? `inset 0 0 0 1px ${TOKENS.colorSecondary}` : 'none',
+                transition: TRANSITION,
+                ...REDUCED_MOTION,
+                '&:hover': { bgcolor: selected ? TOKENS.colorPrimary : TOKENS.colorBgHover },
+                '&:focus-visible': {
+                    outline: `${TOKENS.borderWidthFocus}px solid ${TOKENS.colorFocus}`,
+                    outlineOffset: '-2px',
+                },
             }}
         >
             <Box
                 component="span"
                 sx={{
-                    color: '#546e7a',
+                    color: TOKENS.colorTextMuted,
                     minWidth: 72,
-                    fontSize: 11,
+                    fontSize: TOKENS.fontSizeMetadata,
+                    fontFamily: TOKENS.fontFamilyMono,
                     fontVariantNumeric: 'tabular-nums',
                     flexShrink: 0,
                 }}
             >
                 {entry.timestamp.toFixed(2)}ms
             </Box>
-            <Box
-                component="span"
-                sx={{
-                    bgcolor: TYPE_COLORS[entry.type],
-                    color: '#fff',
-                    fontSize: 10,
-                    fontWeight: 700,
-                    px: '6px',
-                    py: '1px',
-                    borderRadius: '3px',
-                    flexShrink: 0,
-                    letterSpacing: '0.02em',
-                }}
-            >
-                {entry.type}
-            </Box>
+            <Badge tone={getBadgeTone(entry)}>{TYPE_LABEL[entry.type]}</Badge>
             <Box
                 component="span"
                 sx={{
@@ -76,85 +82,23 @@ export function EventItem({ entry }: Props): React.ReactElement {
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                     minWidth: 0,
+                    color: selected ? TOKENS.colorText : TOKENS.colorTextSecondary,
                 }}
             >
-                {renderSummary(entry)}
+                {renderEventSummary(entry)}
+            </Box>
+            <Box
+                component="span"
+                sx={{
+                    color: TOKENS.colorTextMuted,
+                    fontFamily: TOKENS.fontFamilyMono,
+                    fontVariantNumeric: 'tabular-nums',
+                    fontSize: TOKENS.fontSizeMetadata,
+                    flexShrink: 0,
+                }}
+            >
+                #{entry.sequence}
             </Box>
         </Box>
     );
-}
-
-function renderSummary(entry: TimelineEntry): React.ReactNode {
-    if (entry.type === 'dom') {
-        const d = entry.data as DomEventData;
-        return `${d.nativeType} on ${d.target.selectorPath}`;
-    }
-
-    if (entry.type === 'network') {
-        const d = entry.data as NetworkEventData;
-        if (d.phase === 'request') return `→ ${d.method} ${d.url}`;
-        if (d.phase === 'response') {
-            return (
-                <>
-                    <span style={{ color: d.ok ? TOKENS.colorDiffAdd : TOKENS.colorError }}>
-                        {d.status}
-                    </span>
-                    {' '}{d.method} {d.url}{' '}
-                    <span style={{ color: '#546e7a' }}>({d.durationMs.toFixed(0)}ms)</span>
-                </>
-            );
-        }
-        return (
-            <span style={{ color: TOKENS.colorError }}>
-                ✗ {d.method} {d.url} — {d.message}
-            </span>
-        );
-    }
-
-    if (entry.type === 'console') {
-        const d = entry.data as ConsoleEventData;
-        const first = d.args[0];
-        const levelColor =
-            d.level === 'error' ? TOKENS.colorError :
-            d.level === 'warn' ? TOKENS.colorWarn : '#c8d6df';
-        return (
-            <>
-                <span style={{ color: levelColor }}>[{d.level}]</span>
-                {' '}
-                {typeof first === 'string' ? first : JSON.stringify(first)}
-            </>
-        );
-    }
-
-    if (entry.type === 'state') {
-        const d = entry.data as StateEventData;
-        return (
-            <>
-                <span style={{ color: '#7b96a8' }}>{d.origin}/{d.label}</span>
-                {': '}
-                <span style={{ color: TOKENS.colorDiffRemove }}>{JSON.stringify(d.before)}</span>
-                {' → '}
-                <span style={{ color: TOKENS.colorDiffAdd }}>{JSON.stringify(d.after)}</span>
-            </>
-        );
-    }
-
-    if (entry.type === 'typescript') {
-        const d = entry.data as TypesEventData;
-        const severityColor =
-            d.severity === 'error' ? TOKENS.colorError :
-            d.severity === 'warning' ? TOKENS.colorWarn : '#c8d6df';
-        const loc = d.file
-            ? ` ${d.file}${d.line !== undefined ? `:${d.line}` : ''}`
-            : '';
-        return (
-            <>
-                <span style={{ color: severityColor }}>TS{d.code}</span>
-                {loc && <span style={{ color: '#546e7a' }}>{loc}</span>}
-                {' '}{d.message}
-            </>
-        );
-    }
-
-    return JSON.stringify(entry.data);
 }

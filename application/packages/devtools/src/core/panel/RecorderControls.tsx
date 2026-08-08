@@ -1,15 +1,8 @@
 import React, { useRef, useState } from 'react';
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Stack,
-} from '@mui/material';
+import { Box, Dialog, Stack } from '@mui/material';
 import type { NetworkEventData } from '@henriquecosta/react-debug-machine-shared';
 import type { PlayerEventHandler, Recording, RecorderStatus } from '@henriquecosta/react-debug-machine-recorder';
+import { PrimaryButton, SecondaryButton } from './Buttons';
 import { TOKENS } from './tokens';
 
 export interface RecorderControlsProps {
@@ -35,15 +28,6 @@ function hasUnsafeNetworkReplay(recording: Recording): boolean {
         return data.phase === 'request' && data.method !== 'GET';
     });
 }
-
-const buttonSx = {
-    color: TOKENS.colorSecondary,
-    fontSize: 11,
-    minWidth: 0,
-    px: 1,
-    fontFamily: TOKENS.fontFamily,
-    '&:hover': { color: '#fff' },
-} as const;
 
 export function RecorderControls({
     status,
@@ -87,56 +71,63 @@ export function RecorderControls({
     }
 
     return (
-        <Stack direction="row" spacing={0.5} alignItems="center">
+        <Stack direction="row" spacing={`${TOKENS.space2}px`} alignItems="center">
             {status === 'recording' ? (
-                <Button size="small" onClick={onStop} sx={{ ...buttonSx, color: TOKENS.colorError }}>
-                    ● Stop
-                </Button>
+                <SecondaryButton tone="error" onClick={onStop}>● Stop</SecondaryButton>
             ) : (
-                <Button size="small" onClick={onStart} sx={buttonSx}>
-                    ● Record
-                </Button>
+                <PrimaryButton onClick={onStart}>● Record</PrimaryButton>
             )}
             {recording && (
                 <>
-                    <Button size="small" disabled={isPlaying} onClick={handlePlayClick} sx={buttonSx}>
-                        ▶ Play
-                    </Button>
-                    <Button size="small" disabled={!isPlaying} onClick={onPause} sx={buttonSx}>
-                        ⏸ Pause
-                    </Button>
-                    <Button size="small" onClick={handleExportClick} sx={buttonSx}>
-                        Export
-                    </Button>
+                    <SecondaryButton disabled={isPlaying} onClick={handlePlayClick}>▶ Play</SecondaryButton>
+                    <SecondaryButton disabled={!isPlaying} onClick={onPause}>⏸ Pause</SecondaryButton>
+                    <SecondaryButton onClick={handleExportClick}>Export</SecondaryButton>
                 </>
             )}
-            <Button size="small" onClick={() => fileInputRef.current?.click()} sx={buttonSx}>
-                Import
-            </Button>
+            <SecondaryButton onClick={() => fileInputRef.current?.click()}>Import</SecondaryButton>
             <input ref={fileInputRef} type="file" accept="application/json" hidden onChange={handleFileChange} />
 
-            <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
-                <DialogTitle>Replay includes non-GET requests</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
+            <Dialog
+                open={confirmOpen}
+                onClose={() => setConfirmOpen(false)}
+                sx={{ zIndex: TOKENS.zToggle }}
+                slotProps={{
+                    backdrop: { sx: { bgcolor: TOKENS.colorOverlay } },
+                    paper: {
+                        sx: {
+                            bgcolor: TOKENS.colorBgElevated,
+                            border: `1px solid ${TOKENS.colorBorder}`,
+                            borderRadius: `${TOKENS.radiusLg}px`,
+                            boxShadow: TOKENS.shadowModal,
+                            color: TOKENS.colorText,
+                            fontFamily: TOKENS.fontFamily,
+                        },
+                    },
+                }}
+            >
+                <Box sx={{ p: `${TOKENS.space4}px`, display: 'flex', flexDirection: 'column', gap: `${TOKENS.space3}px` }}>
+                    <Box sx={{ fontSize: TOKENS.fontSizeHeading, fontWeight: TOKENS.fontWeightHeading, color: TOKENS.colorText }}>
+                        Replay includes non-GET requests
+                    </Box>
+                    <Box sx={{ fontSize: TOKENS.fontSizeBody, color: TOKENS.colorTextSecondary, lineHeight: '18px' }}>
                         This recording replays at least one network request with a method other than GET.
                         Request bodies aren&apos;t captured, so replay resends only method + url — it can
                         duplicate a real side effect (e.g. a POST creating a second order) on the host
                         app&apos;s backend.
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setConfirmOpen(false)}>Cancel</Button>
-                    <Button
-                        color="error"
-                        onClick={() => {
-                            setConfirmOpen(false);
-                            onPlay();
-                        }}
-                    >
-                        Replay anyway
-                    </Button>
-                </DialogActions>
+                    </Box>
+                    <Stack direction="row" spacing={`${TOKENS.space2}px`} justifyContent="flex-end">
+                        <SecondaryButton onClick={() => setConfirmOpen(false)}>Cancel</SecondaryButton>
+                        <SecondaryButton
+                            tone="error"
+                            onClick={() => {
+                                setConfirmOpen(false);
+                                onPlay();
+                            }}
+                        >
+                            Replay anyway
+                        </SecondaryButton>
+                    </Stack>
+                </Box>
             </Dialog>
         </Stack>
     );

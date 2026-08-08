@@ -1,25 +1,29 @@
 import React, { useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Box, Button, Stack, Tab, Tabs, Typography } from '@mui/material';
-import type { DebugEvent, DebugSession } from '@henriquecosta/react-debug-machine-shared';
+import { Box, Tab, Tabs } from '@mui/material';
+import type { DebugEvent, DebugSession, TimelineEntry } from '@henriquecosta/react-debug-machine-shared';
 import type { ReplayerRegistry } from '@henriquecosta/react-debug-machine-recorder';
 import { useDebugMachine } from '../hooks/useDebugMachine';
 import { useRecorder } from '../hooks/useRecorder';
+import { Header } from './Header';
+import { Timeline } from './Timeline';
 import { EventList } from './EventList';
+import { Inspector } from './Inspector';
 import { RecorderControls } from './RecorderControls';
-import { TOKENS } from './tokens';
+import { FOCUS_RING, REDUCED_MOTION, TOKENS, TRANSITION } from './tokens';
 
 type TabValue = DebugEvent['type'] | 'all';
 
 const TABS: TabValue[] = ['all', 'dom', 'network', 'console', 'state', 'typescript'];
 
+const PANEL_HEIGHT = 420;
+const SAFE_GAP = `max(${TOKENS.space3}px, env(safe-area-inset-bottom))`;
+const SAFE_GAP_RIGHT = `max(${TOKENS.space3}px, env(safe-area-inset-right))`;
+
 const panelTheme = createTheme({
     palette: {
         mode: 'dark',
-        background: {
-            default: TOKENS.colorBg,
-            paper: TOKENS.colorBg,
-        },
+        background: { default: TOKENS.colorBg, paper: TOKENS.colorBgElevated },
         primary: { main: TOKENS.colorPrimary },
         secondary: { main: TOKENS.colorSecondary },
         error: { main: TOKENS.colorError },
@@ -32,12 +36,43 @@ const panelTheme = createTheme({
     components: {
         MuiTab: {
             styleOverrides: {
-                root: { minHeight: 36, fontSize: 12, padding: '0 10px', textTransform: 'none' },
+                root: {
+                    minHeight: 32,
+                    fontSize: TOKENS.fontSizeSmallLabel,
+                    fontWeight: TOKENS.fontWeightSmallLabel,
+                    padding: `0 ${TOKENS.space3}px`,
+                    textTransform: 'none',
+                    color: TOKENS.colorTextMuted,
+                    borderRadius: `${TOKENS.radiusMd}px ${TOKENS.radiusMd}px 0 0`,
+                    fontFamily: TOKENS.fontFamily,
+                    '&.Mui-selected': {
+                        color: TOKENS.colorText,
+                        backgroundColor: TOKENS.colorBgActive,
+                    },
+                    '&.Mui-focusVisible': FOCUS_RING,
+                },
             },
         },
         MuiTabs: {
             styleOverrides: {
-                root: { minHeight: 36 },
+                root: { minHeight: 32 },
+                indicator: { backgroundColor: TOKENS.colorFocus, height: 2 },
+            },
+        },
+        MuiTooltip: {
+            styleOverrides: {
+                tooltip: {
+                    backgroundColor: TOKENS.colorBgElevated,
+                    color: TOKENS.colorText,
+                    border: `1px solid ${TOKENS.colorBorder}`,
+                    borderRadius: `${TOKENS.radiusMd}px`,
+                    boxShadow: TOKENS.shadowPopover,
+                    fontFamily: TOKENS.fontFamily,
+                    fontSize: TOKENS.fontSizeMetadata,
+                    fontWeight: TOKENS.fontWeightMetadata,
+                    padding: `${TOKENS.space1}px ${TOKENS.space2}px`,
+                },
+                arrow: { color: TOKENS.colorBgElevated },
             },
         },
     },
@@ -54,41 +89,75 @@ export interface DebugMachineDevtoolsProps {
 export function DebugMachineDevtools({ session, replayers = {} }: DebugMachineDevtoolsProps): React.ReactElement {
     const [open, setOpen] = useState(false);
     const [tab, setTab] = useState<TabValue>('all');
+    const [selectedSequence, setSelectedSequence] = useState<number | null>(null);
     const { events, clear } = useDebugMachine(session);
     const recorder = useRecorder(session, replayers);
 
     const filtered = tab === 'all' ? events : events.filter((e) => e.type === tab);
+    const selectedEntry: TimelineEntry | null =
+        selectedSequence === null ? null : (events.find((e) => e.sequence === selectedSequence) ?? null);
 
     function countFor(t: TabValue): number {
         return t === 'all' ? events.length : events.filter((e) => e.type === t).length;
     }
 
+    function handleClear(): void {
+        clear();
+        setSelectedSequence(null);
+    }
+
     return (
         <ThemeProvider theme={panelTheme}>
-            {/* Toggle button — always visible, floats above the panel */}
-            <Button
-                variant="contained"
+            {/* Toggle — DESIGN.md "Toggle do Devtools": 32x32 visual, 40x40 hit area, fixed, safe-area aware. */}
+            <Box
+                component="button"
+                type="button"
+                aria-label={open ? 'Close React Debug Machine' : 'Open React Debug Machine'}
+                aria-pressed={open}
                 onClick={() => setOpen((v) => !v)}
                 sx={{
                     position: 'fixed',
-                    bottom: open ? 308 : 16,
-                    right: 16,
-                    zIndex: 999999,
-                    fontFamily: TOKENS.fontFamily,
-                    fontSize: 12,
-                    fontWeight: 700,
-                    minWidth: 56,
-                    height: 28,
-                    bgcolor: TOKENS.colorPrimary,
-                    color: '#fff',
-                    borderRadius: '4px',
-                    transition: 'bottom 0.15s ease',
-                    '&:hover': { bgcolor: '#575a6e' },
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+                    bottom: open ? `calc(${PANEL_HEIGHT}px + ${SAFE_GAP})` : SAFE_GAP,
+                    right: SAFE_GAP_RIGHT,
+                    zIndex: TOKENS.zToggle,
+                    width: 40,
+                    height: 40,
+                    p: 0,
+                    border: 'none',
+                    background: 'transparent',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: TRANSITION,
+                    ...REDUCED_MOTION,
+                    '&:focus-visible > span': FOCUS_RING,
+                    '&:hover > span': { borderColor: TOKENS.colorBorderStrong, backgroundColor: open ? TOKENS.colorBgActive : TOKENS.colorBgHover },
                 }}
             >
-                RDM
-            </Button>
+                <Box
+                    component="span"
+                    sx={{
+                        width: 32,
+                        height: 32,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: `${TOKENS.radiusMd}px`,
+                        border: `1px solid ${TOKENS.colorBorderStrong}`,
+                        bgcolor: open ? TOKENS.colorPrimary : TOKENS.colorBgElevated,
+                        color: TOKENS.colorText,
+                        fontFamily: TOKENS.fontFamily,
+                        fontSize: TOKENS.fontSizeToggleLabel,
+                        fontWeight: TOKENS.fontWeightToggleLabel,
+                        boxShadow: TOKENS.shadowPopover,
+                        transition: TRANSITION,
+                        ...REDUCED_MOTION,
+                    }}
+                >
+                    RDM
+                </Box>
+            </Box>
 
             {/* Panel */}
             {open && (
@@ -98,39 +167,17 @@ export function DebugMachineDevtools({ session, replayers = {} }: DebugMachineDe
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        height: 300,
+                        height: PANEL_HEIGHT,
                         bgcolor: TOKENS.colorBg,
-                        borderTop: `2px solid ${TOKENS.colorSecondary}`,
-                        zIndex: 999998,
+                        borderTop: `1px solid ${TOKENS.colorBorderStrong}`,
+                        zIndex: TOKENS.zToggle,
                         display: 'flex',
                         flexDirection: 'column',
                         fontFamily: TOKENS.fontFamily,
-                        boxShadow: '0 -4px 24px rgba(0,0,0,0.5)',
+                        boxShadow: TOKENS.shadowPanel,
                     }}
                 >
-                    {/* Header */}
-                    <Stack
-                        direction="row"
-                        alignItems="center"
-                        sx={{
-                            px: 2,
-                            py: 0.5,
-                            borderBottom: `1px solid ${TOKENS.colorSecondary}`,
-                            flexShrink: 0,
-                        }}
-                    >
-                        <Typography
-                            sx={{
-                                fontWeight: 700,
-                                fontSize: 13,
-                                color: '#e0ecf4',
-                                flex: 1,
-                                fontFamily: TOKENS.fontFamily,
-                                letterSpacing: '0.03em',
-                            }}
-                        >
-                            React Debug Machine
-                        </Typography>
+                    <Header onClear={handleClear} onClose={() => setOpen(false)}>
                         <RecorderControls
                             status={recorder.status}
                             recording={recorder.recording}
@@ -142,62 +189,48 @@ export function DebugMachineDevtools({ session, replayers = {} }: DebugMachineDe
                             onExport={recorder.exportJson}
                             onImport={recorder.importJson}
                         />
-                        <Button
-                            size="small"
-                            onClick={clear}
-                            sx={{
-                                color: TOKENS.colorSecondary,
-                                fontSize: 11,
-                                minWidth: 0,
-                                px: 1,
-                                fontFamily: TOKENS.fontFamily,
-                                '&:hover': { color: '#fff' },
-                            }}
-                        >
-                            Clear
-                        </Button>
-                        <Button
-                            size="small"
-                            onClick={() => setOpen(false)}
-                            sx={{
-                                color: '#7b96a8',
-                                fontSize: 14,
-                                minWidth: 0,
-                                px: 0.5,
-                                ml: 0.5,
-                                lineHeight: 1,
-                                fontFamily: TOKENS.fontFamily,
-                                '&:hover': { color: '#fff' },
-                            }}
-                        >
-                            ×
-                        </Button>
-                    </Stack>
+                    </Header>
 
-                    {/* Tab bar */}
+                    {/* Filter row — DESIGN.md "filtros globais" under Header responsibilities. */}
                     <Tabs
                         value={tab}
                         onChange={(_, v: TabValue) => setTab(v)}
-                        textColor="inherit"
-                        TabIndicatorProps={{ style: { backgroundColor: TOKENS.colorDiffAdd, height: 2 } }}
+                        variant="scrollable"
+                        scrollButtons={false}
                         sx={{
                             flexShrink: 0,
-                            borderBottom: `1px solid #1e2a33`,
-                            '& .MuiTab-root': { color: '#7b96a8' },
-                            '& .Mui-selected': { color: '#e0ecf4' },
+                            minHeight: 32,
+                            borderBottom: `1px solid ${TOKENS.colorBorder}`,
+                            bgcolor: TOKENS.colorBgSubtle,
+                            px: `${TOKENS.space2}px`,
                         }}
                     >
                         {TABS.map((t) => (
-                            <Tab
-                                key={t}
-                                value={t}
-                                label={`${t} (${countFor(t)})`}
-                            />
+                            <Tab key={t} value={t} label={`${t.toUpperCase()} (${countFor(t)})`} />
                         ))}
                     </Tabs>
 
-                    {/* Event list */}
-                    <EventList events={filtered} />
+                    <Timeline events={events} selectedSequence={selectedSequence} onSelect={setSelectedSequence} />
+
+                    {/* Main content — DESIGN.md layout: Navegação/eventos | Inspector/detalhes */}
+                    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'row', minHeight: 0 }}>
+                        <Box
+                            sx={{
+                                width: '38%',
+                                minWidth: 240,
+                                maxWidth: 420,
+                                borderRight: `1px solid ${TOKENS.colorBorder}`,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                minHeight: 0,
+                            }}
+                        >
+                            <EventList events={filtered} selectedSequence={selectedSequence} onSelect={setSelectedSequence} />
+                        </Box>
+                        <Box sx={{ flex: 1, minWidth: 0, bgcolor: TOKENS.colorBgSubtle, overflow: 'hidden' }}>
+                            <Inspector entry={selectedEntry} />
+                        </Box>
+                    </Box>
                 </Box>
             )}
         </ThemeProvider>
