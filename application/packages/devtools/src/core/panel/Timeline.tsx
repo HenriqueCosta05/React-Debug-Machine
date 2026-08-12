@@ -1,8 +1,7 @@
 import React from 'react';
-import { Box, Tooltip } from '@mui/material';
+import { Box, Tooltip, useTheme } from '@mui/material';
 import type { TimelineEntry } from '@henriquecosta/react-debug-machine-shared';
 import { getEventColor, TYPE_LABEL } from './eventPresentation';
-import { FOCUS_RING, REDUCED_MOTION, TOKENS, TRANSITION } from './tokens';
 
 interface Props {
     events: readonly TimelineEntry[];
@@ -13,6 +12,7 @@ interface Props {
 // Compact chronological strip (DESIGN.md "Timeline") — one tick per event,
 // oldest first, colored by severity/type, selection mirrors the nav list.
 export function Timeline({ events, selectedSequence, onSelect }: Props): React.ReactElement {
+    const theme = useTheme();
     return (
         <Box
             role="region"
@@ -20,11 +20,11 @@ export function Timeline({ events, selectedSequence, onSelect }: Props): React.R
             sx={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: `${TOKENS.space1}px`,
+                gap: `${theme.spacing(0.5)}`,
                 height: 44,
-                px: `${TOKENS.space3}px`,
-                borderBottom: `1px solid ${TOKENS.colorBorder}`,
-                bgcolor: TOKENS.colorBgSubtle,
+                px: `${theme.spacing(1.5)}`,
+                borderBottom: `1px solid ${theme.palette.divider}`,
+                bgcolor: theme.palette.background.default,
                 overflowX: 'auto',
                 overflowY: 'hidden',
                 flexShrink: 0,
@@ -34,9 +34,9 @@ export function Timeline({ events, selectedSequence, onSelect }: Props): React.R
             {events.length === 0 ? (
                 <Box
                     sx={{
-                        color: TOKENS.colorTextMuted,
-                        fontSize: TOKENS.fontSizeMetadata,
-                        fontFamily: TOKENS.fontFamily,
+                        color: theme.palette.text.disabled,
+                        fontSize: 11,
+                        fontFamily: theme.typography.fontFamily,
                     }}
                 >
                     No events on the timeline yet.
@@ -64,15 +64,12 @@ export function Timeline({ events, selectedSequence, onSelect }: Props): React.R
                                     height: 24,
                                     p: 0,
                                     border: 'none',
-                                    borderRadius: `${TOKENS.radiusSm}px`,
+                                    borderRadius: `${theme.shape.borderRadius / 2}px`,
                                     bgcolor: color,
-                                    opacity: selected ? 1 : TOKENS.opacityDivider,
-                                    boxShadow: selected ? `0 0 0 1px ${TOKENS.colorSecondary}` : 'none',
+                                    opacity: selected ? 1 : 0.65,
+                                    boxShadow: selected ? `0 0 0 1px ${theme.palette.secondary.main}` : 'none',
                                     cursor: 'pointer',
-                                    transition: TRANSITION,
-                                    ...REDUCED_MOTION,
                                     '&:hover': { opacity: 1 },
-                                    '&:focus-visible': FOCUS_RING,
                                 }}
                             />
                         </Tooltip>

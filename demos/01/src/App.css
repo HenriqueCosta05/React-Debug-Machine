@@ -1,3 +1,83 @@
+/*
+ * Restaurantto design system tokens.
+ *
+ * This app was a dark-only trading dashboard before this pass, so dark
+ * stays the default appearance (`:root`) to preserve the existing visual
+ * identity. The DS's light palette is wired up as an opt-in override via
+ * `[data-theme="light"]` on a root element (e.g. <html data-theme="light">),
+ * so both palettes are available even though nothing currently toggles it.
+ */
+:root {
+  --bg: #171412;
+  --surface: #211D1B;
+  --surface-2: #2A2522;
+  --border: #37302B;
+  --border-strong: #453C36;
+  --text: #F1EDE9;
+  --text-2: #B0A69D;
+  --text-3: #7A7169;
+  --brand: #8C2036;
+  --brand-hover: #A32C45;
+  --brand-ink: #E8A0AF;
+  --brand-soft: rgba(232, 160, 175, 0.13);
+  --brand-softer: rgba(232, 160, 175, 0.07);
+  --on-brand: #FFFFFF;
+  --chart-2: #C97C60;
+  --positive: #4CC08A;
+  --positive-soft: rgba(76, 192, 138, 0.14);
+  --negative: #E06A5B;
+  --negative-soft: rgba(224, 106, 91, 0.13);
+  --warning: #D9A93F;
+  --warning-soft: rgba(217, 169, 63, 0.13);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.25);
+  --ring: 0 0 0 3px rgba(232, 160, 175, 0.25);
+
+  /* fonts */
+  --font-sans: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, Menlo, monospace;
+
+  /* spacing scale (base 4) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-10: 40px;
+
+  /* radii */
+  --radius-btn: 9px;
+  --radius-field: 10px;
+  --radius-banner: 12px;
+  --radius-card: 14px;
+  --radius-pill: 999px;
+}
+
+[data-theme='light'] {
+  --bg: #FAF9F7;
+  --surface: #FFFFFF;
+  --surface-2: #F3F0EC;
+  --border: #E8E3DD;
+  --border-strong: #D8D1C9;
+  --text: #1C1917;
+  --text-2: #71675F;
+  --text-3: #A39A91;
+  --brand: #740318;
+  --brand-hover: #8C1B31;
+  --brand-ink: #740318;
+  --brand-soft: rgba(116, 3, 24, 0.07);
+  --brand-softer: rgba(116, 3, 24, 0.04);
+  --on-brand: #FFFFFF;
+  --chart-2: #D98E73;
+  --positive: #1F8A5B;
+  --positive-soft: rgba(31, 138, 91, 0.12);
+  --negative: #C0392B;
+  --negative-soft: rgba(192, 57, 43, 0.10);
+  --warning: #9A6B00;
+  --warning-soft: rgba(154, 107, 0, 0.12);
+  --shadow: 0 1px 2px rgba(28, 25, 23, 0.05), 0 4px 12px rgba(28, 25, 23, 0.05);
+  --ring: 0 0 0 3px rgba(116, 3, 24, 0.18);
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -5,9 +85,9 @@
 }
 
 body {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-  background: #0D0D0E;
-  color: #EDEBEB;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -15,4 +95,12 @@ body {
 
 button {
   font-family: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
 }

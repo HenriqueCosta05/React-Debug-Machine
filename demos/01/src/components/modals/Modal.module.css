@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.72);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,9 +16,10 @@
 }
 
 .dialog {
-  background: #1a1a1c;
-  border: 1px solid #2a2a2e;
-  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
   width: 100%;
   max-width: 360px;
   margin: 16px;
@@ -34,34 +35,37 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 18px 0;
+  padding: var(--space-4) var(--space-4) 0;
 }
 
 .title {
-  font-size: 15px;
-  font-weight: 600;
-  color: #EDEBEB;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
 }
 
+/* Icon button pattern (compact) */
 .close {
   width: 28px;
   height: 28px;
-  border-radius: 8px;
-  background: #222226;
-  border: 1px solid #2a2a2e;
-  color: #888;
+  border-radius: var(--radius-field);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-2);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: color 0.15s, background 0.15s;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
 }
 
 .close:hover {
-  color: #EDEBEB;
-  background: #2a2a2e;
+  color: var(--text);
+  background: var(--surface);
+  border-color: var(--border-strong);
 }
 
 .body {
-  padding: 18px;
+  padding: var(--space-4);
 }

@@ -9,7 +9,7 @@ import type {
     TypesEventData,
 } from '@henriquecosta/react-debug-machine-shared';
 import type { BadgeTone } from './Badge';
-import { TOKENS } from './tokens';
+import { theme } from './theme';
 import { getEventSeverity } from './eventSeverity';
 
 export const TYPE_LABEL: Record<DebugEvent['type'], string> = {
@@ -24,10 +24,10 @@ export const TYPE_LABEL: Record<DebugEvent['type'], string> = {
 const TYPE_TONE: Record<DebugEvent['type'], BadgeTone> = {
     dom: 'info',
     network: 'secondary',
-    console: 'neutral',
+    console: 'secondary',
     state: 'success',
-    typescript: 'neutral',
-    custom: 'neutral',
+    typescript: 'secondary',
+    custom: 'secondary',
 };
 
 // Badge tone leans on severity (error/warn) when the event carries one, so the
@@ -35,24 +35,24 @@ const TYPE_TONE: Record<DebugEvent['type'], BadgeTone> = {
 export function getBadgeTone(entry: TimelineEntry): BadgeTone {
     const severity = getEventSeverity(entry);
     if (severity === 'error') return 'error';
-    if (severity === 'warn') return 'warn';
+    if (severity === 'warn') return 'warning';
     return TYPE_TONE[entry.type];
 }
 
 const TYPE_COLOR: Record<DebugEvent['type'], string> = {
-    dom: TOKENS.colorInfo,
-    network: TOKENS.colorSecondary,
-    console: TOKENS.colorTextSecondary,
-    state: TOKENS.colorSuccess,
-    typescript: TOKENS.colorTextSecondary,
-    custom: TOKENS.colorTextMuted,
+    dom: theme.palette.info.main,
+    network: theme.palette.secondary.main,
+    console: theme.palette.text.secondary,
+    state: theme.palette.success.main,
+    typescript: theme.palette.text.secondary,
+    custom: theme.palette.text.disabled,
 };
 
 // Solid color for the timeline tick — same severity-first precedence as the badge tone.
 export function getEventColor(entry: TimelineEntry): string {
     const severity = getEventSeverity(entry);
-    if (severity === 'error') return TOKENS.colorError;
-    if (severity === 'warn') return TOKENS.colorWarn;
+    if (severity === 'error') return theme.palette.error.main;
+    if (severity === 'warn') return theme.palette.warning.main;
     return TYPE_COLOR[entry.type];
 }
 
@@ -68,14 +68,14 @@ export function renderEventSummary(entry: TimelineEntry): React.ReactNode {
         if (d.phase === 'response') {
             return (
                 <>
-                    <span style={{ color: d.ok ? TOKENS.colorSuccess : TOKENS.colorError }}>{d.status}</span>{' '}
+                    <span style={{ color: d.ok ? theme.palette.success.main : theme.palette.error.main }}>{d.status}</span>{' '}
                     {d.method} {d.url}{' '}
-                    <span style={{ color: TOKENS.colorTextMuted }}>({d.durationMs.toFixed(0)}ms)</span>
+                    <span style={{ color: theme.palette.text.disabled }}>({d.durationMs.toFixed(0)}ms)</span>
                 </>
             );
         }
         return (
-            <span style={{ color: TOKENS.colorError }}>
+            <span style={{ color: theme.palette.error.main }}>
                 ✗ {d.method} {d.url} — {d.message}
             </span>
         );
@@ -85,7 +85,7 @@ export function renderEventSummary(entry: TimelineEntry): React.ReactNode {
         const d = entry.data as ConsoleEventData;
         const first = d.args[0];
         const levelColor =
-            d.level === 'error' ? TOKENS.colorError : d.level === 'warn' ? TOKENS.colorWarn : TOKENS.colorTextSecondary;
+            d.level === 'error' ? theme.palette.error.main : d.level === 'warn' ? theme.palette.warning.main : theme.palette.text.secondary;
         return (
             <>
                 <span style={{ color: levelColor }}>[{d.level}]</span>{' '}
@@ -98,11 +98,11 @@ export function renderEventSummary(entry: TimelineEntry): React.ReactNode {
         const d = entry.data as StateEventData;
         return (
             <>
-                <span style={{ color: TOKENS.colorTextMuted }}>{d.origin}/{d.label}</span>
+                <span style={{ color: theme.palette.text.disabled }}>{d.origin}/{d.label}</span>
                 {': '}
-                <span style={{ color: TOKENS.colorDiffRemove }}>{JSON.stringify(d.before)}</span>
+                <span style={{ color: theme.palette.error.main }}>{JSON.stringify(d.before)}</span>
                 {' → '}
-                <span style={{ color: TOKENS.colorDiffAdd }}>{JSON.stringify(d.after)}</span>
+                <span style={{ color: theme.palette.success.main }}>{JSON.stringify(d.after)}</span>
             </>
         );
     }
@@ -110,12 +110,12 @@ export function renderEventSummary(entry: TimelineEntry): React.ReactNode {
     if (entry.type === 'typescript') {
         const d = entry.data as TypesEventData;
         const severityColor =
-            d.severity === 'error' ? TOKENS.colorError : d.severity === 'warning' ? TOKENS.colorWarn : TOKENS.colorTextSecondary;
+            d.severity === 'error' ? theme.palette.error.main : d.severity === 'warning' ? theme.palette.warning.main : theme.palette.text.secondary;
         const loc = d.file ? ` ${d.file}${d.line !== undefined ? `:${d.line}` : ''}` : '';
         return (
             <>
                 <span style={{ color: severityColor }}>TS{d.code}</span>
-                {loc && <span style={{ color: TOKENS.colorTextMuted }}>{loc}</span>}
+                {loc && <span style={{ color: theme.palette.text.disabled }}>{loc}</span>}
                 {' '}{d.message}
             </>
         );

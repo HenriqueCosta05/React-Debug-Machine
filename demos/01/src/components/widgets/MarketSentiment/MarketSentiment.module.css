@@ -1,8 +1,9 @@
 .card {
-  background: #161618;
-  border-radius: 16px;
+  background: var(--surface);
+  border-radius: var(--radius-card);
   padding: 18px;
-  border: 1px solid #222226;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -12,26 +13,27 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 4px;
+  margin-bottom: var(--space-1);
 }
 
 .title {
   font-size: 13px;
-  color: #888;
+  color: var(--text-2);
   font-weight: 500;
 }
 
 .value {
-  font-size: 42px;
+  font-size: 34px;
   font-weight: 700;
-  color: #EDEBEB;
+  letter-spacing: -0.025em;
+  color: var(--text);
   line-height: 1;
 }
 
 .percent {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 500;
-  color: #aaa;
+  color: var(--text-2);
 }
 
 .gauge {
@@ -39,10 +41,38 @@
   flex: 1;
 }
 
+.gaugeBgStopStart {
+  stop-color: var(--positive);
+}
+
+.gaugeBgStopEnd {
+  stop-color: var(--positive);
+}
+
+.tick {
+  stroke: var(--border);
+}
+
+.gaugeTrack {
+  stroke: var(--surface-2);
+}
+
+.gaugeFill {
+  stroke: var(--positive);
+}
+
+.gaugeDot {
+  fill: var(--positive);
+}
+
+.gaugeDotHole {
+  fill: var(--surface);
+}
+
 .caption {
   font-size: 12px;
-  color: #666;
+  color: var(--text-3);
   text-align: center;
   line-height: 1.4;
-  margin-top: 4px;
+  margin-top: var(--space-1);
 }

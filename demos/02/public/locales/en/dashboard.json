@@ -1,0 +1,21 @@
+{
+  "title": "Portfolio dashboard",
+  "stats": {
+    "totalValue": "Total value",
+    "dayChange": "Day change",
+    "openPositions": "Open positions"
+  },
+  "recentTrades": {
+    "title": "Recent trades",
+    "count_one": "{{count}} trade",
+    "count_other": "{{count}} trades"
+  },
+  "table": {
+    "symbol": "Symbol",
+    "side": "Side",
+    "quantity": "Qty",
+    "price": "Price",
+    "status": "Status",
+    "date": "Date"
+  }
+}

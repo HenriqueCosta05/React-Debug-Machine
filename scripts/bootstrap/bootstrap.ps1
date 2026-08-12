@@ -49,6 +49,9 @@ function Bootstrap {
     Write-Host "Installing dependencies..."
     Invoke-Native { pnpm install }
 
+    Write-Host "Building packages and linking them into demos..."
+    Invoke-Native { node (Join-Path $PSScriptRoot "link-local-packages.mjs") }
+
     Write-Host "Running dev script from the root package.json..."
     pnpm run dev
 }

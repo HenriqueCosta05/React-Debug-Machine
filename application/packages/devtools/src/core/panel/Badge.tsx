@@ -1,17 +1,7 @@
 import React from 'react';
-import { Box } from '@mui/material';
-import { TOKENS } from './tokens';
+import { Box, useTheme } from '@mui/material';
 
-export type BadgeTone = 'error' | 'warn' | 'success' | 'info' | 'secondary' | 'neutral';
-
-const TONE_COLORS: Record<BadgeTone, { bg: string; fg: string }> = {
-    error: { bg: TOKENS.colorError, fg: TOKENS.colorBg },
-    warn: { bg: TOKENS.colorWarn, fg: TOKENS.colorBg },
-    success: { bg: TOKENS.colorSuccess, fg: TOKENS.colorBg },
-    info: { bg: TOKENS.colorInfo, fg: TOKENS.colorBg },
-    secondary: { bg: TOKENS.colorSecondary, fg: TOKENS.colorText },
-    neutral: { bg: TOKENS.colorBgActive, fg: TOKENS.colorTextSecondary },
-};
+export type BadgeTone = 'error' | 'warning' | 'success' | 'info' | 'secondary';
 
 interface BadgeProps {
     children: React.ReactNode;
@@ -19,22 +9,22 @@ interface BadgeProps {
 }
 
 // Dimensions per DESIGN.md "Badges": 11px/700, 6px horizontal / 2px vertical padding, radius-sm.
-export function Badge({ children, tone = 'neutral' }: BadgeProps): React.ReactElement {
-    const colors = TONE_COLORS[tone];
+export function Badge({ children, tone = 'info' }: BadgeProps): React.ReactElement {
+    const theme = useTheme();
     return (
         <Box
             component="span"
             sx={{
                 display: 'inline-block',
-                bgcolor: colors.bg,
-                color: colors.fg,
-                fontFamily: TOKENS.fontFamily,
+                bgcolor: theme.palette[tone].main,
+                color: theme.palette.getContrastText(theme.palette[tone].main),
+                fontFamily: theme.typography.fontFamily,
                 fontSize: 11,
                 fontWeight: 700,
                 lineHeight: '14px',
                 px: '6px',
                 py: '2px',
-                borderRadius: `${TOKENS.radiusSm}px`,
+                borderRadius: `${theme.shape.borderRadius}px`,
                 letterSpacing: '0.02em',
                 whiteSpace: 'nowrap',
                 flexShrink: 0,

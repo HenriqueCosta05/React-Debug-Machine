@@ -31,8 +31,8 @@ function Gauge({ value }: GaugeProps) {
     <svg viewBox="0 0 200 175" className={styles.gauge}>
       <defs>
         <radialGradient id="gaugeBg" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#25A84A" stopOpacity="0.06" />
-          <stop offset="100%" stopColor="#25A84A" stopOpacity="0" />
+          <stop className={styles.gaugeBgStopStart} offset="0%" stopOpacity="0.06" />
+          <stop className={styles.gaugeBgStopEnd} offset="100%" stopOpacity="0" />
         </radialGradient>
       </defs>
 
@@ -43,15 +43,15 @@ function Gauge({ value }: GaugeProps) {
         const inner = polarToXY(cx, cy, 84, angle);
         const outer = polarToXY(cx, cy, 88, angle);
         return (
-          <line key={i} x1={inner.x} y1={inner.y} x2={outer.x} y2={outer.y}
-            stroke="rgba(255,255,255,0.04)" strokeWidth="1.5" />
+          <line key={i} className={styles.tick} x1={inner.x} y1={inner.y} x2={outer.x} y2={outer.y}
+            strokeWidth="1.5" />
         );
       })}
 
-      <path d={trackPath} fill="none" stroke="#262628" strokeWidth="10" strokeLinecap="round" />
-      <path d={fillPath} fill="none" stroke="#25A84A" strokeWidth="10" strokeLinecap="round" />
-      <circle cx={dot.x} cy={dot.y} r="7" fill="#25A84A" />
-      <circle cx={dot.x} cy={dot.y} r="3.5" fill="#0D0D0E" />
+      <path d={trackPath} className={styles.gaugeTrack} fill="none" strokeWidth="10" strokeLinecap="round" />
+      <path d={fillPath} className={styles.gaugeFill} fill="none" strokeWidth="10" strokeLinecap="round" />
+      <circle cx={dot.x} cy={dot.y} r="7" className={styles.gaugeDot} />
+      <circle cx={dot.x} cy={dot.y} r="3.5" className={styles.gaugeDotHole} />
     </svg>
   );
 }

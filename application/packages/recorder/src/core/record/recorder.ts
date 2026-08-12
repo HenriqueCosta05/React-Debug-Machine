@@ -40,7 +40,12 @@ export function createRecorder(bus: EventBus) {
         unsubscribe?.();
         unsubscribe = null;
         status = 'stopped';
-        return { id: createRecordingId(), startedAt, endedAt: Date.now(), entries };
+        return {
+            id: createRecordingId(),
+            startedAt,
+            endedAt: Date.now(),
+            entries: bus.filterDuplicateEvents(entries) as TimelineEntry[],
+        };
     }
 
     function getStatus(): RecorderStatus {

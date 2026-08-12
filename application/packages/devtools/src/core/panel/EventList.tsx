@@ -1,9 +1,8 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import type { TimelineEntry } from '@henriquecosta/react-debug-machine-shared';
 import { EventItem } from './EventItem';
 import { EmptyState } from './EmptyState';
-import { TOKENS } from './tokens';
 
 interface Props {
     events: readonly TimelineEntry[];
@@ -12,11 +11,12 @@ interface Props {
 }
 
 export function EventList({ events, selectedSequence, onSelect }: Props): React.ReactElement {
+    const theme = useTheme();
     return (
         <Box
             role="listbox"
             aria-label="Captured events"
-            sx={{ flex: 1, overflowY: 'auto', fontFamily: TOKENS.fontFamily, minHeight: 0 }}
+            sx={{ flex: 1, overflowY: 'auto', fontFamily: theme.typography.fontFamily, minHeight: 0 }}
         >
             {events.length === 0 ? (
                 <EmptyState

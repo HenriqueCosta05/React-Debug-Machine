@@ -1,5 +1,5 @@
 import { describe, expect, it, rstest } from '@rstest/core';
-import { createEventBus } from '@henriquecosta/react-debug-machine-shared';
+import { createEventBus, DEBUG_MACHINE_IGNORE_ATTRIBUTE } from '@henriquecosta/react-debug-machine-shared';
 import { startDomCapture } from '../core/capture/capture';
 import { createRootRegistry } from '../core/roots/registry';
 
@@ -56,6 +56,24 @@ describe('startDomCapture', () => {
         dispatchClick(document.getElementById('save')!);
 
         expect(handler).not.toHaveBeenCalled();
+    });
+
+    it('ignora eventos originados dentro de um elemento marcado com data-debug-machine-ignore (ex.: o painel de devtools)', () => {
+        document.body.innerHTML = `
+            <button id="save">Save</button>
+            <div id="devtools-panel" ${DEBUG_MACHINE_IGNORE_ATTRIBUTE}><button id="clear">Clear</button></div>
+        `;
+        const bus = createEventBus();
+        const handler = rstest.fn();
+        bus.subscribe('dom', handler);
+
+        const stop = startDomCapture(bus);
+        dispatchClick(document.getElementById('clear')!);
+        dispatchClick(document.getElementById('save')!);
+        stop();
+
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler.mock.calls[0][0].data.target.id).toBe('save');
     });
 
     it('captura só os eventTypes configurados', () => {

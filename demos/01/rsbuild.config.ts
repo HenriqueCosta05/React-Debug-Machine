@@ -60,6 +60,20 @@ export default defineConfig({
       'react-dom': path.resolve('./node_modules/react-dom'),
     },
   },
+  html: {
+    tags: [
+      { tag: 'link', attrs: { rel: 'preconnect', href: 'https://fonts.googleapis.com' }, head: true },
+      { tag: 'link', attrs: { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: true }, head: true },
+      {
+        tag: 'link',
+        attrs: {
+          href: 'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&family=DM+Mono:wght@400;500&display=swap',
+          rel: 'stylesheet',
+        },
+        head: true,
+      },
+    ],
+  },
   dev: {
     setupMiddlewares: [
       (middlewares) => {

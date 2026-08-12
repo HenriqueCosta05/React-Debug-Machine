@@ -28,22 +28,22 @@ function LineChart({ data }: { data: PerformancePoint[] }) {
     <svg viewBox={`0 0 ${W} ${H}`} className={styles.chart} preserveAspectRatio="none">
       <defs>
         <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#EDEBEB" stopOpacity="0.08" />
-          <stop offset="100%" stopColor="#EDEBEB" stopOpacity="0" />
+          <stop className={styles.lineGradStart} offset="0%" stopOpacity="0.08" />
+          <stop className={styles.lineGradEnd} offset="100%" stopOpacity="0" />
         </linearGradient>
       </defs>
 
-      <polyline points={points} fill="none" stroke="#EDEBEB" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" />
+      <polyline points={points} className={styles.line} fill="none" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" />
 
-      <line x1={tx} y1={pad.t - 10} x2={tx} y2={H - pad.b} stroke="rgba(255,255,255,0.15)" strokeWidth="1" strokeDasharray="3 3" />
-      <circle cx={tx} cy={ty} r="3.5" fill="#EDEBEB" />
-      <rect x={tx - 38} y={pad.t - 18} width="76" height="18" rx="9" fill="#EDEBEB" />
-      <text x={tx} y={pad.t - 5} textAnchor="middle" fontSize="9" fill="#0D0D0E" fontWeight="700">
+      <line x1={tx} y1={pad.t - 10} x2={tx} y2={H - pad.b} className={styles.guide} strokeWidth="1" strokeDasharray="3 3" />
+      <circle cx={tx} cy={ty} r="3.5" className={styles.dot} />
+      <rect x={tx - 38} y={pad.t - 18} width="76" height="18" rx="9" className={styles.tooltip} />
+      <text x={tx} y={pad.t - 5} textAnchor="middle" fontSize="9" className={styles.tooltipText} fontWeight="700">
         ${data[tooltipIdx].value.toLocaleString()}
       </text>
 
       {data.map((d, i) => (
-        <text key={i} x={toX(i)} y={H - 4} textAnchor="middle" fontSize="9" fill="#555">
+        <text key={i} x={toX(i)} y={H - 4} textAnchor="middle" fontSize="9" className={styles.axisLabel}>
           {d.month}
         </text>
       ))}

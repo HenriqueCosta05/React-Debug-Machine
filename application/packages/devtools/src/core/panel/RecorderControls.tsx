@@ -1,9 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { Box, Dialog, Stack } from '@mui/material';
+import { Box, Dialog, Stack, useTheme } from '@mui/material';
 import type { NetworkEventData } from '@henriquecosta/react-debug-machine-shared';
 import type { PlayerEventHandler, Recording, RecorderStatus } from '@henriquecosta/react-debug-machine-recorder';
 import { PrimaryButton, SecondaryButton } from './Buttons';
-import { TOKENS } from './tokens';
 
 export interface RecorderControlsProps {
     status: RecorderStatus;
@@ -40,6 +39,7 @@ export function RecorderControls({
     onExport,
     onImport,
 }: RecorderControlsProps): React.ReactElement {
+    const theme = useTheme();
     const [confirmOpen, setConfirmOpen] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -71,7 +71,7 @@ export function RecorderControls({
     }
 
     return (
-        <Stack direction="row" spacing={`${TOKENS.space2}px`} alignItems="center">
+        <Stack direction="row" spacing={`${theme.spacing(1)}`} alignItems="center">
             {status === 'recording' ? (
                 <SecondaryButton tone="error" onClick={onStop}>● Stop</SecondaryButton>
             ) : (
@@ -90,32 +90,30 @@ export function RecorderControls({
             <Dialog
                 open={confirmOpen}
                 onClose={() => setConfirmOpen(false)}
-                sx={{ zIndex: TOKENS.zToggle }}
                 slotProps={{
-                    backdrop: { sx: { bgcolor: TOKENS.colorOverlay } },
                     paper: {
                         sx: {
-                            bgcolor: TOKENS.colorBgElevated,
-                            border: `1px solid ${TOKENS.colorBorder}`,
-                            borderRadius: `${TOKENS.radiusLg}px`,
-                            boxShadow: TOKENS.shadowModal,
-                            color: TOKENS.colorText,
-                            fontFamily: TOKENS.fontFamily,
+                            bgcolor: theme.palette.background.paper,
+                            border: `1px solid ${theme.palette.divider}`,
+                            borderRadius: `${theme.shape.borderRadius * 1.5}px`,
+                            boxShadow: theme.shadows[4],
+                            color: theme.palette.text.primary,
+                            fontFamily: theme.typography.fontFamily,
                         },
                     },
                 }}
             >
-                <Box sx={{ p: `${TOKENS.space4}px`, display: 'flex', flexDirection: 'column', gap: `${TOKENS.space3}px` }}>
-                    <Box sx={{ fontSize: TOKENS.fontSizeHeading, fontWeight: TOKENS.fontWeightHeading, color: TOKENS.colorText }}>
+                <Box sx={{ p: `${theme.spacing(2)}`, display: 'flex', flexDirection: 'column', gap: `${theme.spacing(1.5)}` }}>
+                    <Box sx={{ fontSize: 20, fontWeight: 700, color: theme.palette.text.primary }}>
                         Replay includes non-GET requests
                     </Box>
-                    <Box sx={{ fontSize: TOKENS.fontSizeBody, color: TOKENS.colorTextSecondary, lineHeight: '18px' }}>
+                    <Box sx={{ fontSize: 14, color: theme.palette.text.secondary, lineHeight: '18px' }}>
                         This recording replays at least one network request with a method other than GET.
                         Request bodies aren&apos;t captured, so replay resends only method + url — it can
                         duplicate a real side effect (e.g. a POST creating a second order) on the host
                         app&apos;s backend.
                     </Box>
-                    <Stack direction="row" spacing={`${TOKENS.space2}px`} justifyContent="flex-end">
+                    <Stack direction="row" spacing={`${theme.spacing(1)}`} justifyContent="flex-end">
                         <SecondaryButton onClick={() => setConfirmOpen(false)}>Cancel</SecondaryButton>
                         <SecondaryButton
                             tone="error"

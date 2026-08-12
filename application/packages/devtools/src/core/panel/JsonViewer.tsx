@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Box } from '@mui/material';
-import { TOKENS } from './tokens';
+import { Box, useTheme } from '@mui/material';
+import { MONO_FONT_FAMILY } from './theme';
 
 interface JsonViewerProps {
     value: unknown;
@@ -13,16 +13,17 @@ interface JsonViewerProps {
 // (42 stays a number, false stays a boolean). Collapse state is explicit — never
 // hides data as a side effect of a default. See DESIGN.md "JSON viewer".
 export function JsonViewer({ value, inline = false }: JsonViewerProps): React.ReactElement {
+    const theme = useTheme();
     return (
         <Box
             component={inline ? 'span' : 'pre'}
             sx={{
                 m: 0,
                 display: inline ? 'inline' : 'block',
-                fontFamily: TOKENS.fontFamilyMono,
-                fontSize: TOKENS.fontSizeJson,
+                fontFamily: MONO_FONT_FAMILY,
+                fontSize: 12,
                 lineHeight: '17px',
-                color: TOKENS.colorText,
+                color: theme.palette.text.primary,
                 whiteSpace: 'pre-wrap',
                 wordBreak: 'break-word',
                 overflowX: inline ? undefined : 'auto',
@@ -41,23 +42,25 @@ interface Entry {
 }
 
 function JsonNode({ value, depth }: { value: unknown; depth: number }): React.ReactElement {
-    if (value === null) return <JsonScalar text="null" color={TOKENS.colorTextMuted} />;
-    if (value === undefined) return <JsonScalar text="undefined" color={TOKENS.colorTextMuted} />;
+    const theme = useTheme();
+
+    if (value === null) return <JsonScalar text="null" color={theme.palette.text.disabled} />;
+    if (value === undefined) return <JsonScalar text="undefined" color={theme.palette.text.disabled} />;
 
     if (typeof value === 'string') {
-        return <JsonScalar text={JSON.stringify(value)} color={TOKENS.colorInfo} />;
+        return <JsonScalar text={JSON.stringify(value)} color={theme.palette.info.main} />;
     }
     if (typeof value === 'number') {
-        return <JsonScalar text={String(value)} color={TOKENS.colorSuccess} tabular />;
+        return <JsonScalar text={String(value)} color={theme.palette.success.main} tabular />;
     }
     if (typeof value === 'bigint') {
-        return <JsonScalar text={`${String(value)}n`} color={TOKENS.colorSuccess} tabular />;
+        return <JsonScalar text={`${String(value)}n`} color={theme.palette.success.main} tabular />;
     }
     if (typeof value === 'boolean') {
-        return <JsonScalar text={String(value)} color={TOKENS.colorSecondary} />;
+        return <JsonScalar text={String(value)} color={theme.palette.secondary.main} />;
     }
     if (typeof value === 'function') {
-        return <JsonScalar text={`ƒ ${value.name || 'anonymous'}()`} color={TOKENS.colorTextMuted} />;
+        return <JsonScalar text={`ƒ ${value.name || 'anonymous'}()`} color={theme.palette.text.disabled} />;
     }
 
     if (Array.isArray(value)) {
@@ -77,7 +80,7 @@ function JsonNode({ value, depth }: { value: unknown; depth: number }): React.Re
         return <CollapsibleEntries openBracket="{" closeBracket="}" entries={entries} depth={depth} showKeys />;
     }
 
-    return <JsonScalar text={String(value)} color={TOKENS.colorTextMuted} />;
+    return <JsonScalar text={String(value)} color={theme.palette.text.disabled} />;
 }
 
 function JsonScalar({ text, color, tabular }: { text: string; color: string; tabular?: boolean }): React.ReactElement {
@@ -104,11 +107,12 @@ function CollapsibleEntries({
     depth: number;
     showKeys: boolean;
 }): React.ReactElement {
+    const theme = useTheme();
     const [collapsed, setCollapsed] = useState(false);
 
     if (entries.length === 0) {
         return (
-            <Box component="span" sx={{ color: TOKENS.colorTextSecondary }}>
+            <Box component="span" sx={{ color: theme.palette.text.secondary }}>
                 {openBracket}{closeBracket}
             </Box>
         );
@@ -124,16 +128,12 @@ function CollapsibleEntries({
                 aria-label={collapsed ? `Expand ${entries.length} items` : `Collapse ${entries.length} items`}
                 sx={{
                     font: 'inherit',
-                    color: TOKENS.colorTextSecondary,
+                    color: theme.palette.text.secondary,
                     background: 'transparent',
                     border: 'none',
                     p: 0,
                     cursor: 'pointer',
-                    '&:hover': { color: TOKENS.colorText },
-                    '&:focus-visible': {
-                        outline: `${TOKENS.borderWidthFocus}px solid ${TOKENS.colorFocus}`,
-                        outlineOffset: '1px',
-                    },
+                    '&:hover': { color: theme.palette.text.primary },
                 }}
             >
                 {openBracket}
@@ -144,17 +144,17 @@ function CollapsibleEntries({
                     {entries.map((entry, index) => (
                         <Box key={entry.key} sx={{ pl: `${INDENT_PX}px` }}>
                             {showKeys && (
-                                <Box component="span" sx={{ color: TOKENS.colorTextSecondary }}>
+                                <Box component="span" sx={{ color: theme.palette.text.secondary }}>
                                     {JSON.stringify(entry.key)}:{' '}
                                 </Box>
                             )}
                             <JsonNode value={entry.value} depth={depth + 1} />
                             {index < entries.length - 1 && (
-                                <Box component="span" sx={{ color: TOKENS.colorTextMuted }}>,</Box>
+                                <Box component="span" sx={{ color: theme.palette.text.disabled }}>,</Box>
                             )}
                         </Box>
                     ))}
-                    <Box component="span" sx={{ color: TOKENS.colorTextSecondary }}>{closeBracket}</Box>
+                    <Box component="span" sx={{ color: theme.palette.text.secondary }}>{closeBracket}</Box>
                 </>
             )}
         </Box>

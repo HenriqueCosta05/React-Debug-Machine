@@ -1,6 +1,5 @@
 import React from 'react';
-import { Box } from '@mui/material';
-import { TOKENS } from './tokens';
+import { Box, useTheme } from '@mui/material';
 
 interface EmptyStateProps {
     title: string;
@@ -9,19 +8,20 @@ interface EmptyStateProps {
 
 // Compact empty state per DESIGN.md — must answer what's empty, why, and what to do next; no large illustrations.
 export function EmptyState({ title, description }: EmptyStateProps): React.ReactElement {
+    const theme = useTheme();
     return (
-        <Box sx={{ p: `${TOKENS.space4}px`, fontFamily: TOKENS.fontFamily }}>
+        <Box sx={{ p: `${theme.spacing(2)}`, fontFamily: theme.typography.fontFamily }}>
             <Box
                 sx={{
-                    fontSize: TOKENS.fontSizeBodyCompact,
+                    fontSize: 13,
                     fontWeight: 700,
-                    color: TOKENS.colorTextSecondary,
-                    mb: `${TOKENS.space1}px`,
+                    color: theme.palette.text.secondary,
+                    mb: `${theme.spacing(0.5)}`,
                 }}
             >
                 {title}
             </Box>
-            <Box sx={{ fontSize: TOKENS.fontSizeMetadata, color: TOKENS.colorTextMuted, lineHeight: '16px' }}>
+            <Box sx={{ fontSize: 11, color: theme.palette.text.disabled, lineHeight: '16px' }}>
                 {description}
             </Box>
         </Box>

@@ -1,6 +1,6 @@
 {
   "name": "@henriquecosta/react-debug-machine-recorder",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Record and replay a debug session window for React Debug Machine.",
   "type": "module",
   "keywords": [
