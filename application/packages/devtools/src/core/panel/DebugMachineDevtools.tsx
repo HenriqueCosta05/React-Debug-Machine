@@ -1,184 +1,169 @@
 import React, { useState } from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Box, Button, Stack, Tab, Tabs, Typography } from '@mui/material';
-import type { DebugEvent, DebugSession } from '@henriquecosta/react-debug-machine-shared';
+import { ThemeProvider } from '@mui/material/styles';
+import { Box, Tab, Tabs, useTheme } from '@mui/material';
+import type { DebugEvent, DebugSession, TimelineEntry } from '@henriquecosta/react-debug-machine-shared';
+import { DEBUG_MACHINE_IGNORE_ATTRIBUTE } from '@henriquecosta/react-debug-machine-shared';
+import type { ReplayerRegistry } from '@henriquecosta/react-debug-machine-recorder';
 import { useDebugMachine } from '../hooks/useDebugMachine';
+import { useRecorder } from '../hooks/useRecorder';
+import { Header } from './Header';
+import { Timeline } from './Timeline';
 import { EventList } from './EventList';
-import { TOKENS } from './tokens';
+import { Inspector } from './Inspector';
+import { RecorderControls } from './RecorderControls';
+import BuildIcon from '@mui/icons-material/Build';
 
 type TabValue = DebugEvent['type'] | 'all';
 
 const TABS: TabValue[] = ['all', 'dom', 'network', 'console', 'state', 'typescript'];
-
-const panelTheme = createTheme({
-    palette: {
-        mode: 'dark',
-        background: {
-            default: TOKENS.colorBg,
-            paper: TOKENS.colorBg,
-        },
-        primary: { main: TOKENS.colorPrimary },
-        secondary: { main: TOKENS.colorSecondary },
-        error: { main: TOKENS.colorError },
-        warning: { main: TOKENS.colorWarn },
-    },
-    typography: {
-        fontFamily: TOKENS.fontFamily,
-        body1: { fontSize: TOKENS.fontSizeBody, fontWeight: TOKENS.fontWeightBody },
-    },
-    components: {
-        MuiTab: {
-            styleOverrides: {
-                root: { minHeight: 36, fontSize: 12, padding: '0 10px', textTransform: 'none' },
-            },
-        },
-        MuiTabs: {
-            styleOverrides: {
-                root: { minHeight: 36 },
-            },
-        },
-    },
-});
+const PANEL_HEIGHT = 400;
+const SAFE_GAP = 16;
+const SAFE_GAP_RIGHT = 24;
 
 export interface DebugMachineDevtoolsProps {
     session: DebugSession;
+    replayers?: ReplayerRegistry;
 }
 
-export function DebugMachineDevtools({ session }: DebugMachineDevtoolsProps): React.ReactElement {
+export function DebugMachineDevtools({ session, replayers = {} }: DebugMachineDevtoolsProps): React.ReactElement {
+    const theme = useTheme();
     const [open, setOpen] = useState(false);
     const [tab, setTab] = useState<TabValue>('all');
+    const [selectedSequence, setSelectedSequence] = useState<number | null>(null);
     const { events, clear } = useDebugMachine(session);
+    const recorder = useRecorder(session, replayers);
 
     const filtered = tab === 'all' ? events : events.filter((e) => e.type === tab);
+    const selectedEntry: TimelineEntry | null =
+        selectedSequence === null ? null : (events.find((e) => e.sequence === selectedSequence) ?? null);
 
     function countFor(t: TabValue): number {
         return t === 'all' ? events.length : events.filter((e) => e.type === t).length;
     }
 
+    function handleClear(): void {
+        clear();
+        setSelectedSequence(null);
+    }
+
     return (
-        <ThemeProvider theme={panelTheme}>
-            {/* Toggle button — always visible, floats above the panel */}
-            <Button
-                variant="contained"
+        <ThemeProvider theme={theme}>
+            <Box
+                component="button"
+                type="button"
+                {...{ [DEBUG_MACHINE_IGNORE_ATTRIBUTE]: '' }}
+                aria-label={open ? 'Close React Debug Machine' : 'Open React Debug Machine'}
+                aria-pressed={open}
                 onClick={() => setOpen((v) => !v)}
                 sx={{
                     position: 'fixed',
-                    bottom: open ? 308 : 16,
-                    right: 16,
-                    zIndex: 999999,
-                    fontFamily: TOKENS.fontFamily,
-                    fontSize: 12,
-                    fontWeight: 700,
-                    minWidth: 56,
-                    height: 28,
-                    bgcolor: TOKENS.colorPrimary,
-                    color: '#fff',
-                    borderRadius: '4px',
-                    transition: 'bottom 0.15s ease',
-                    '&:hover': { bgcolor: '#575a6e' },
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+                    bottom: open ? `calc(${PANEL_HEIGHT}px + ${SAFE_GAP})` : SAFE_GAP,
+                    right: SAFE_GAP_RIGHT,
+                    zIndex: 9999,
+                    width: 40,
+                    height: 40,
+                    p: 0,
+                    border: 'none',
+                    background: 'transparent',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
                 }}
             >
-                RDM
-            </Button>
-
-            {/* Panel */}
+                <Box
+                    component="span"
+                    sx={{
+                        width: 32,
+                        height: 32,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: `${theme.shape.borderRadius}px`,
+                        border: `1px solid ${theme.palette.divider}`,
+                        bgcolor: open ? theme.palette.primary.main : theme.palette.background.paper,
+                        color: theme.palette.text.primary,
+                        fontFamily: theme.typography.fontFamily,
+                        fontSize: theme.typography.fontSize,
+                        fontWeight: theme.typography.fontWeightMedium,
+                        boxShadow: theme.shadows[1],
+                    }}
+                >
+                    <BuildIcon />
+                </Box>
+            </Box>
+        {/* Panel */}
             {open && (
                 <Box
+                    {...{ [DEBUG_MACHINE_IGNORE_ATTRIBUTE]: '' }}
                     sx={{
                         position: 'fixed',
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        height: 300,
-                        bgcolor: TOKENS.colorBg,
-                        borderTop: `2px solid ${TOKENS.colorSecondary}`,
-                        zIndex: 999998,
+                        height: PANEL_HEIGHT,
+                        bgcolor: theme.palette.background.paper,
+                        borderTop: `1px solid ${theme.palette.divider}`,
+                        zIndex: theme.zIndex.modal,
                         display: 'flex',
                         flexDirection: 'column',
-                        fontFamily: TOKENS.fontFamily,
-                        boxShadow: '0 -4px 24px rgba(0,0,0,0.5)',
+                        fontFamily: theme.typography.fontFamily,
+                        boxShadow: theme.shadows[1],
                     }}
                 >
-                    {/* Header */}
-                    <Stack
-                        direction="row"
-                        alignItems="center"
-                        sx={{
-                            px: 2,
-                            py: 0.5,
-                            borderBottom: `1px solid ${TOKENS.colorSecondary}`,
-                            flexShrink: 0,
-                        }}
-                    >
-                        <Typography
-                            sx={{
-                                fontWeight: 700,
-                                fontSize: 13,
-                                color: '#e0ecf4',
-                                flex: 1,
-                                fontFamily: TOKENS.fontFamily,
-                                letterSpacing: '0.03em',
-                            }}
-                        >
-                            React Debug Machine
-                        </Typography>
-                        <Button
-                            size="small"
-                            onClick={clear}
-                            sx={{
-                                color: TOKENS.colorSecondary,
-                                fontSize: 11,
-                                minWidth: 0,
-                                px: 1,
-                                fontFamily: TOKENS.fontFamily,
-                                '&:hover': { color: '#fff' },
-                            }}
-                        >
-                            Clear
-                        </Button>
-                        <Button
-                            size="small"
-                            onClick={() => setOpen(false)}
-                            sx={{
-                                color: '#7b96a8',
-                                fontSize: 14,
-                                minWidth: 0,
-                                px: 0.5,
-                                ml: 0.5,
-                                lineHeight: 1,
-                                fontFamily: TOKENS.fontFamily,
-                                '&:hover': { color: '#fff' },
-                            }}
-                        >
-                            ×
-                        </Button>
-                    </Stack>
+                    <Header onClear={handleClear} onClose={() => setOpen(false)}>
+                        <RecorderControls
+                            status={recorder.status}
+                            recording={recorder.recording}
+                            isPlaying={recorder.isPlaying}
+                            onStart={recorder.start}
+                            onStop={recorder.stop}
+                            onPlay={recorder.play}
+                            onPause={recorder.pause}
+                            onExport={recorder.exportJson}
+                            onImport={recorder.importJson}
+                        />
+                    </Header>
 
-                    {/* Tab bar */}
+                    {/* Filter row — DESIGN.md "filtros globais" under Header responsibilities. */}
                     <Tabs
                         value={tab}
                         onChange={(_, v: TabValue) => setTab(v)}
-                        textColor="inherit"
-                        TabIndicatorProps={{ style: { backgroundColor: TOKENS.colorDiffAdd, height: 2 } }}
+                        variant="scrollable"
+                        scrollButtons={false}
                         sx={{
                             flexShrink: 0,
-                            borderBottom: `1px solid #1e2a33`,
-                            '& .MuiTab-root': { color: '#7b96a8' },
-                            '& .Mui-selected': { color: '#e0ecf4' },
+                            minHeight: 32,
+                            borderBottom: `1px solid ${theme.palette.divider}`,
+                            bgcolor: theme.palette.background.paper,
+                            px: `${theme.spacing(2)}`,
                         }}
                     >
                         {TABS.map((t) => (
-                            <Tab
-                                key={t}
-                                value={t}
-                                label={`${t} (${countFor(t)})`}
-                            />
+                            <Tab key={t} value={t} label={`${t.toUpperCase()} (${countFor(t)})`} />
                         ))}
                     </Tabs>
 
-                    {/* Event list */}
-                    <EventList events={filtered} />
+                    <Timeline events={events} selectedSequence={selectedSequence} onSelect={setSelectedSequence} />
+
+                    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'row', minHeight: 0 }}>
+                        <Box
+                            sx={{
+                                width: '38%',
+                                minWidth: 240,
+                                maxWidth: 420,
+                                borderRight: `1px solid ${theme.palette.divider}`,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                minHeight: 0,
+                            }}
+                        >
+                            <EventList events={filtered} selectedSequence={selectedSequence} onSelect={setSelectedSequence} />
+                        </Box>
+                        <Box sx={{ flex: 1, minWidth: 0, bgcolor: theme.palette.background.paper, overflow: 'hidden' }}>
+                            <Inspector entry={selectedEntry} />
+                        </Box>
+                    </Box>
                 </Box>
             )}
         </ThemeProvider>

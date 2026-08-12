@@ -1,0 +1,36 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--space-6);
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+  background: var(--bg);
+}
+
+.main {
+  flex: 1;
+  padding: var(--space-1) 0 var(--space-2);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1.75fr 1.15fr;
+  grid-template-rows: 220px 220px 120px;
+  gap: var(--space-4);
+}
+
+/* col1 */
+.marketSentiment    { grid-column: 1; grid-row: 1; }
+.protectCapital     { grid-column: 1; grid-row: 2; }
+.quickActions       { grid-column: 1; grid-row: 3; }
+
+/* col2 */
+.portfolioPerformance { grid-column: 2; grid-row: 1; }
+.tradingActivity    { grid-column: 2; grid-row: 2; }
+.topPicks           { grid-column: 2; grid-row: 3; }
+
+/* col3 — portfolio spans rows 1-2, lastActivity in row 3 */
+.myPortfolio        { grid-column: 3; grid-row: 1 / 3; }
+.lastActivity       { grid-column: 3; grid-row: 3; }

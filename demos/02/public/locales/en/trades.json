@@ -1,0 +1,17 @@
+{
+  "form": { "title": "Place a trade" },
+  "fields": {
+    "symbol": "Symbol",
+    "side": "Side",
+    "quantity": "Quantity",
+    "price": "Price"
+  },
+  "side": { "buy": "Buy", "sell": "Sell" },
+  "status": { "pending": "Pending", "filled": "Filled", "rejected": "Rejected" },
+  "errors": {
+    "symbol": "Enter a ticker symbol",
+    "quantity": "Quantity must be greater than zero",
+    "price": "Price must be greater than zero"
+  },
+  "success": "Trade submitted successfully"
+}

@@ -3,6 +3,7 @@ export type DomTargetDescriptor = {
     id: string | null;
     className: string | null;
     selectorPath: string;
+    cursorPosition: { x: number; y: number };
 };
 
 export type DomEventData = {

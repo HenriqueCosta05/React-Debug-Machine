@@ -1,0 +1,161 @@
+.card {
+  background: #161618;
+  border-radius: 16px;
+  padding: 18px;
+  border: 1px solid #222226;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 13px;
+  color: #888;
+  font-weight: 500;
+}
+
+.deposit {
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 16px;
+  color: #EDEBEB;
+  font-size: 12px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.deposit:hover {
+  background: #222226;
+  border-color: #555;
+}
+
+.valueRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.total {
+  font-size: 28px;
+  font-weight: 700;
+  color: #EDEBEB;
+  line-height: 1;
+}
+
+.badge {
+  background: #1a3d22;
+  color: #25A84A;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 10px;
+  margin-bottom: 2px;
+}
+
+.monthRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.monthLabel {
+  font-size: 10px;
+  color: #555;
+  margin-bottom: 2px;
+}
+
+.monthValue {
+  font-size: 13px;
+  font-weight: 600;
+  color: #EDEBEB;
+}
+
+.sparkline {
+  display: block;
+}
+
+.bar {
+  display: flex;
+  height: 6px;
+  border-radius: 4px;
+  overflow: hidden;
+  gap: 1px;
+}
+
+.barSegment {
+  border-radius: 2px;
+  transition: opacity 0.2s;
+}
+
+.barSegment:hover {
+  opacity: 0.8;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.listLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.assetName {
+  font-size: 12px;
+  color: #EDEBEB;
+  font-weight: 500;
+}
+
+.assetPct {
+  font-size: 10px;
+  color: #555;
+  margin-top: 1px;
+}
+
+.assetValue {
+  font-size: 13px;
+  font-weight: 600;
+  color: #EDEBEB;
+}
+
+.viewAll {
+  background: transparent;
+  border: 1px solid #2a2a2e;
+  border-radius: 10px;
+  color: #666;
+  font-size: 12px;
+  padding: 8px;
+  cursor: pointer;
+  width: 100%;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.viewAll:hover {
+  color: #EDEBEB;
+  border-color: #444;
+}

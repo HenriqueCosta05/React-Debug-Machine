@@ -3,8 +3,8 @@
 | Campo | Valor |
 |---|---|
 | Projeto | React Debug Machine |
-| Versão do documento | 2.0 |
-| Última atualização | 2026-08-02 |
+| Versão do documento | 2.2 |
+| Última atualização | 2026-08-08 |
 | Responsável | Henrique Costa |
 | Status | `final` |
 
@@ -116,10 +116,10 @@
             /network             # fetch + XHR — captura + replay
             /types                # integração com TS Language Service (só captura, sem replay)
             /devtools            # painel UI + hook useDebugMachine
+            /recorder            # grava janela start/stop de eventos, export/import JSON, replay agendado
             /react-debugmachine  # wrapper opcional
-        /demos
-            /demo                # app mínimo, dogfood de captura crua
-            /complex-demo        # app mock, dogfood do painel devtools completo
+    /demos
+        /01                  # app mock (dashboard de trading), dogfood do painel devtools + record/replay
 
     README.md
     TODO.md
@@ -170,7 +170,7 @@ Regras de import:
 
 ### 3.2 Princípios estruturais
 
-1. **Fronteiras por feature, não por camada**: cada uma das 5 capacidades é um pacote independente; a UI (`devtools`) é a única camada que conhece todos os adapters.
+1. **Fronteiras por feature, não por camada**: cada uma das 5 capacidades é um pacote independente; a UI (`devtools`) é a única camada que conhece todos os adapters. `recorder` (ADR-005) não é uma 6ª capacidade de captura — é um orquestrador de record/replay agnóstico de adapter, também só conhecido por `devtools`.
 2. **Dependências apontam para dentro**: `devtools` depende dos adapters; nenhum adapter depende de `devtools`.
 3. **Fonte única da verdade**: o event bus em `shared` é o único canal de eventos capturados; adapters publicam, nunca leem de volta.
 4. **Contratos explícitos nas bordas**: todo evento publicado no bus segue o schema definido em `shared`, validado no ponto de publicação.
@@ -230,6 +230,8 @@ flowchart LR
 | ADR-002 | TS Language Service não roda no browser (RK-02 confirmado: custo/latência inviáveis). Adapter `types` funciona como receptor: ouve CustomEvent `react-debug-machine:typescript-diagnostic` despachado por tooling externo (plugins de build, watchers, extensões de IDE) e os publica no bus. API direta via `publishTypeDiagnostic(bus, data)` para injeção programática. | aceita | 2026-08-06 |
 | ADR-003 | Modelo de timeline/sessão implementado em `shared` (`createTimeline`, `createDebugSession`) desde o M1/M2, mesmo sem `devtools` (M6) ainda existir: `createTimeline(bus)` só acumula `DebugEvent` em ordem com `sequence`, sem seek/scrubbing (isso fica pra `devtools`); assinatura de adapters (`startXCapture(bus)`) não muda, `Session` é aditivo | aceita | 2026-08-02 |
 | ADR-004 | Adapter `state` (M3) captura React via hook opt-in (`useDebugState`, wrapper de `useState`) em vez de introspecção de fiber, evitando o risco de RK-01 (internals não-documentados, shape muda entre versões); Redux e TanStack usam suas APIs públicas de subscribe/getState | aceita | 2026-08-02 |
+| ADR-005 | Pacote `recorder` (M7) fica agnóstico de adapter: em vez de importar `dom`/`network`/`state`/`console`/`types` diretamente, recebe um `ReplayerRegistry` (map `DebugEvent['type'] → replay fn`) injetado por quem o consome (`devtools`). Mantém "dependências apontam pra dentro" — nenhum adapter conhece `recorder`, `recorder` não conhece nenhum adapter — e reusa `ReplayResult`, movido de `dom` pra `shared` (§ contrato compartilhado, não é abstração prematura: já são 5 pacotes usando o mesmo shape) | aceita | 2026-08-07 |
+| ADR-006 | Replay de `network` (M7) reexecuta a request real (`fetch`) usando só `method` + `url` capturados, pra **qualquer** método, não só GET — corpo/headers não são capturados (gap pré-existente, fora de escopo). Reproduzir um evento não-GET pode duplicar um efeito colateral real no backend da app hospedeira (ex.: `POST` cria pedido de novo). Decisão deliberada: `devtools`/`RecorderControls` exige confirmação explícita do usuário antes de reproduzir qualquer evento de rede não-GET | aceita | 2026-08-07 |
 
 ### 3.7 Anti-padrões proibidos neste projeto
 
@@ -267,3 +269,6 @@ flowchart LR
 | 2026-07-23 | 1.0 | Versão inicial | Henrique Costa |
 | 2026-07-29 | 1.1 | Runner de teste decidido: Rstest (não Vitest); convenção de localização de testes em `src/tests/` — §1.1 e §2.5 | Henrique Costa |
 | 2026-08-02 | 1.2 | ADR-003 (timeline/sessão em `shared`) e ADR-004 (adapter `state` via hook, não fiber) — §3.6 | Henrique Costa |
+| 2026-08-06 | 1.3 | ADR-002 aceito: adapter `types` como receptor de CustomEvent, sem TS compiler no browser — §3.6; todos os milestones M1–M6 concluídos | Henrique Costa |
+| 2026-08-07 | 2.1 | ADR-005 (pacote `recorder`, replayer registry injetado) e ADR-006 (replay de `network` reexecuta request real p/ qualquer método, risco documentado) — §3.6; `/recorder` adicionado à árvore de diretórios — §2.4 | Henrique Costa |
+| 2026-08-08 | 2.2 | §2.4 corrigida: `/demos` fica na raiz do repo (não em `application/demos`), demo real é `/demos/01` (dashboard de trading), não `/demo` e `/complex-demo` (nunca existiram) | Henrique Costa |

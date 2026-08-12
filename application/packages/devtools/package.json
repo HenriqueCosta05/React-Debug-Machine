@@ -1,6 +1,6 @@
 {
   "name": "@henriquecosta/react-debug-machine-devtools",
-  "version": "4.0.0",
+  "version": "4.1.1",
   "description": "Unified debug panel (DOM, state, console, network, types) for React Debug Machine.",
   "type": "module",
   "keywords": [
@@ -28,14 +28,17 @@
     "build": "npm run lint && rslib build",
     "test": "rstest run",
     "coverage": "rstest run --coverage",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "dev": "rslib dev --watch --port 3000 --open"
   },
   "dependencies": {
+    "@henriquecosta/react-debug-machine-recorder": "workspace:*",
     "@henriquecosta/react-debug-machine-shared": "workspace:*"
   },
   "peerDependencies": {
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
+    "@mui/icons-material": "^5.0.0 || ^6.0.0",
     "@mui/material": "^5.0.0 || ^6.0.0",
     "react": "^18.0.0 || ^19.0.0"
   },
@@ -45,6 +48,7 @@
     "@eslint/css": "^1.4.0",
     "@eslint/js": "^10.0.1",
     "@eslint/markdown": "^8.0.3",
+    "@mui/icons-material": "^6.5.0",
     "@mui/material": "^6.4.8",
     "@rsbuild/core": "^2.1.8",
     "@rslib/core": "^0.23.2",

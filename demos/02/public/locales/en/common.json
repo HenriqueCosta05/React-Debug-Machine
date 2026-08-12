@@ -1,0 +1,10 @@
+{
+  "app": { "title": "Trading Demo" },
+  "nav": { "dashboard": "Dashboard", "newTrade": "New trade" },
+  "actions": { "retry": "Retry", "save": "Submit", "cancel": "Cancel" },
+  "states": {
+    "loading": "Loading…",
+    "error": "Something went wrong",
+    "empty": "Nothing here yet"
+  }
+}

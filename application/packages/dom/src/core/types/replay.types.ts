@@ -1,3 +1,1 @@
-export type ReplayResult =
-    | { ok: true }
-    | { ok: false; reason: 'target-not-found' };
+export type { ReplayResult } from '@henriquecosta/react-debug-machine-shared';

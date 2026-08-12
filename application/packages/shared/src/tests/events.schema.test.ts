@@ -22,7 +22,26 @@ describe('isDebugEvent', () => {
     });
 
     it('aceita domínios ainda não tipados (data unknown) desde que tenham type/timestamp válidos', () => {
-        expect(isDebugEvent({ type: 'typescript', timestamp: 1, data: { anything: true } })).toBe(true);
+        expect(isDebugEvent({ type: 'custom', timestamp: 1, data: { anything: true } })).toBe(true);
+    });
+
+    it('aceita evento typescript com severity/code/message válidos', () => {
+        expect(isDebugEvent({
+            type: 'typescript',
+            timestamp: 1,
+            data: { severity: 'error', code: 2345, message: "Argument of type 'string' is not assignable." },
+        })).toBe(true);
+        expect(isDebugEvent({
+            type: 'typescript',
+            timestamp: 1,
+            data: { severity: 'warning', code: 6133, message: "'x' is declared but never used.", file: 'src/App.tsx', line: 4, column: 1 },
+        })).toBe(true);
+    });
+
+    it('rejeita evento typescript com severity desconhecida ou campos ausentes', () => {
+        expect(isDebugEvent({ type: 'typescript', timestamp: 1, data: { anything: true } })).toBe(false);
+        expect(isDebugEvent({ type: 'typescript', timestamp: 1, data: { severity: 'critical', code: 1, message: 'x' } })).toBe(false);
+        expect(isDebugEvent({ type: 'typescript', timestamp: 1, data: { severity: 'error', message: 'x' } })).toBe(false);
     });
 
     it('aceita evento console com level e args válidos', () => {

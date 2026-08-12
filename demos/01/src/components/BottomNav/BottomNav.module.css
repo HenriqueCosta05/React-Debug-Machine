@@ -1,0 +1,33 @@
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-3) 0 var(--space-6);
+}
+
+.item {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-field);
+  background: transparent;
+  border: none;
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+
+.item:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+/* single brand accent reserved for the active nav item, per DS principle */
+.active,
+.active:hover {
+  color: var(--brand-ink);
+  background: var(--brand-soft);
+}

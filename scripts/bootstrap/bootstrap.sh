@@ -41,5 +41,8 @@ cd "$app_dir"
 echo "Installing dependencies..."
 pnpm install
 
+echo "Building packages and linking them into demos..."
+node "$script_dir/link-local-packages.mjs"
+
 echo "Running dev script from the root package.json..."
 pnpm run dev

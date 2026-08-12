@@ -8,6 +8,13 @@ Live backlog. Itens concluídos migram pra "Concluído" com check, não são rem
 
 ## Concluído
 
+- [x] M7 — Pacote `recorder`: `createRecorder(bus)` (janela start/stop, buffer próprio via `bus.subscribeAll`, não reusa `timeline`), `exportRecording`/`importRecording` (JSON, valida com `isDebugEvent`), `createPlayer` (agenda por delta de timestamp, despacha pro `ReplayerRegistry` por tipo, tipo sem replayer reporta em vez de lançar). Agnóstico de adapter (ADR-005). 11 testes
+- [x] M7 — `shared`: `ReplayResult` movido de `dom` pra `shared`, contrato único reusado por `dom`/`network`/`console`/`state`/`types`/`recorder`
+- [x] M7 — `network`: `replayNetworkEvent` reexecuta `fetch` real (`method`+`url`, sem body/headers) pra qualquer método capturado — decisão deliberada, risco de duplicar efeito colateral em não-GET documentado (ADR-006, RK-05 no PRD)
+- [x] M7 — `console`: `replayConsoleEvent` rechama `console[level](...args)`
+- [x] M7 — `state`: `createStateSetterRegistry` + `replayStateEvent`; `useDebugState`/`startTanstackCapture` registram setter/`setQueryData` por `label`; `redux` fica sem replayer por design (sem API pública de set state genérico)
+- [x] M7 — `types`: `replayTypeDiagnostic` no-op `ok:true` (diagnóstico não é ação reversível)
+- [x] M7 — `devtools`: hook `useRecorder(session, replayers)` + componente `RecorderControls` (Record/Stop/Play/Pause/Export/Import), confirmação obrigatória antes de reproduzir evento de rede não-GET
 - [x] M6 — Implementar painel `devtools` unificando os 5 domínios (DOM, estado, console, rede, tipos) com UI overlay fixa na aplicação hospedeira; `DebugMachineDevtools` (React + MUI, tema isolado, toggle RDM, tab bar filtrada por tipo, EventList com diff colorido) + hook `useDebugMachine(session)`
 - [x] M5 — Implementar adapter `types`: diagnostics do TS Language Service ligados ao componente/estado de origem (R-05; viabilidade ADR-002 resolvida: adapter funciona como receptor — ouve CustomEvent `react-debug-machine:typescript-diagnostic` despachado por tooling externo; `publishTypeDiagnostic(bus, data)` para injeção direta; sem rodar TS compiler no browser)
 - [x] M4 — Implementar adapter `console`: interceptação de console.* sem suprimir comportamento original (R-03; só captura, sem replay)

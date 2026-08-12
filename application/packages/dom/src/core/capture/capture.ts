@@ -1,4 +1,5 @@
 import type { EventBus } from '@henriquecosta/react-debug-machine-shared';
+import { isDebugMachineIgnored } from '@henriquecosta/react-debug-machine-shared';
 import type { CaptureOptions } from '../types/capture.types';
 import { DEFAULT_EVENT_TYPES } from '../constants/events';
 import { serializeTarget } from './target';
@@ -7,18 +8,25 @@ export function startDomCapture(bus: EventBus, options: CaptureOptions = {}): ()
     const documentRef = options.documentRef ?? document;
     const eventTypes = options.eventTypes ?? DEFAULT_EVENT_TYPES;
     const rootRegistry = options.rootRegistry;
+    const cursorPosition = { x: 0, y: 0 };
+
+    documentRef.addEventListener('mousemove', (event) => {
+        cursorPosition.x = event.clientX;
+        cursorPosition.y = event.clientY;
+    });
 
     function handleEvent(nativeEvent: Event): void {
         const target = nativeEvent.target;
         if (!(target instanceof Element)) return;
         if (rootRegistry && !rootRegistry.isWithinRegisteredRoot(target)) return;
+        if (isDebugMachineIgnored(target)) return;
 
         bus.publish({
             type: 'dom',
             timestamp: performance.now(),
             data: {
                 nativeType: nativeEvent.type,
-                target: serializeTarget(target),
+                target: serializeTarget(target)
             },
         });
     }

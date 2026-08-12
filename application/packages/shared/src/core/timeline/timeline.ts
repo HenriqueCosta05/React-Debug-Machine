@@ -12,11 +12,11 @@ export function createTimeline(bus: EventBus) {
     });
 
     function getEvents(): readonly TimelineEntry[] {
-        return entries;
+        return bus.filterDuplicateEvents(entries) as TimelineEntry[];
     }
 
     function getEventsByType(type: DebugEvent['type']): readonly TimelineEntry[] {
-        return entries.filter((entry) => entry.type === type);
+        return bus.filterDuplicateEvents(entries.filter((entry) => entry.type === type)) as TimelineEntry[];
     }
 
     function clear(): void {

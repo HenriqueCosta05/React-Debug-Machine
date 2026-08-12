@@ -1,0 +1,116 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 11px;
+  color: #666;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.years {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.yearBtn {
+  padding: 9px 4px;
+  border-radius: 10px;
+  background: #0d0d0e;
+  border: 1px solid #2a2a2e;
+  color: #666;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.yearBtn[data-active='true'] {
+  border-color: #EDEBEB;
+  color: #EDEBEB;
+}
+
+.formats {
+  display: flex;
+  gap: 6px;
+}
+
+.formatBtn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  background: #0d0d0e;
+  border: 1px solid #2a2a2e;
+  color: #666;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s, color 0.15s;
+  letter-spacing: 0.04em;
+}
+
+.formatBtn[data-active='true'] {
+  border-color: #EDEBEB;
+  color: #EDEBEB;
+}
+
+.btnPrimary {
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  background: #EDEBEB;
+  color: #0d0d0e;
+  width: 100%;
+  margin-top: 2px;
+  transition: opacity 0.15s;
+}
+
+.btnPrimary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error {
+  font-size: 12px;
+  color: #E57373;
+  background: #3d1a1a;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0 4px;
+  text-align: center;
+}
+
+.success p {
+  font-size: 15px;
+  font-weight: 600;
+  color: #EDEBEB;
+}
+
+.successSub {
+  font-size: 11px;
+  color: #555;
+}

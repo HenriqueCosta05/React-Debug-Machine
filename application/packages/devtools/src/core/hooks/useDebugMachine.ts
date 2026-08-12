@@ -12,9 +12,9 @@ export function useDebugMachine(session: DebugSession): UseDebugMachineResult {
     );
 
     useEffect(() => {
-        setEvents(session.timeline.getEvents());
+        setEvents([...session.timeline.getEvents()]);
         const unsubscribe = session.bus.subscribeAll(() => {
-            setEvents(session.timeline.getEvents());
+            setEvents([...session.timeline.getEvents()]);
         });
         return unsubscribe;
     }, [session]);

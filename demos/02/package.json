@@ -1,0 +1,58 @@
+{
+  "name": "02",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "rsbuild dev --open",
+    "build": "rsbuild build",
+    "preview": "rsbuild preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@henriquecosta/react-debug-machine-console": "file:./local-packages/henriquecosta-react-debug-machine-console-4.1.1.tgz",
+    "@henriquecosta/react-debug-machine-devtools": "file:./local-packages/henriquecosta-react-debug-machine-devtools-4.1.1.tgz",
+    "@henriquecosta/react-debug-machine-dom": "file:./local-packages/henriquecosta-react-debug-machine-dom-4.1.1.tgz",
+    "@henriquecosta/react-debug-machine-network": "file:./local-packages/henriquecosta-react-debug-machine-network-4.1.1.tgz",
+    "@henriquecosta/react-debug-machine-recorder": "file:./local-packages/henriquecosta-react-debug-machine-recorder-4.1.1.tgz",
+    "@henriquecosta/react-debug-machine-shared": "file:./local-packages/henriquecosta-react-debug-machine-shared-4.1.1.tgz",
+    "@henriquecosta/react-debug-machine-state": "file:./local-packages/henriquecosta-react-debug-machine-state-4.1.1.tgz",
+    "@mui/material": "^6.4.8",
+    "@reduxjs/toolkit": "^2.5.1",
+    "i18next": "^24.2.1",
+    "i18next-browser-languagedetector": "^8.0.2",
+    "i18next-http-backend": "^3.0.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-i18next": "^15.4.0",
+    "react-redux": "^9.2.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^2.1.10",
+    "@rsbuild/plugin-react": "^2.1.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "jsdom": "^25.0.1",
+    "msw": "^2.7.0",
+    "typescript": "^6.0.3",
+    "vitest": "^3.0.5"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  },
+  "overrides": {
+    "@henriquecosta/react-debug-machine-shared": "file:./local-packages/henriquecosta-react-debug-machine-shared-4.1.1.tgz",
+    "@henriquecosta/react-debug-machine-recorder": "file:./local-packages/henriquecosta-react-debug-machine-recorder-4.1.1.tgz"
+  }
+}

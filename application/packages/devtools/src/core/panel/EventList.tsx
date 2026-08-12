@@ -1,24 +1,39 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import type { TimelineEntry } from '@henriquecosta/react-debug-machine-shared';
 import { EventItem } from './EventItem';
-import { TOKENS } from './tokens';
+import { EmptyState } from './EmptyState';
 
 interface Props {
     events: readonly TimelineEntry[];
+    selectedSequence: number | null;
+    onSelect: (sequence: number) => void;
 }
 
-export function EventList({ events }: Props): React.ReactElement {
+export function EventList({ events, selectedSequence, onSelect }: Props): React.ReactElement {
+    const theme = useTheme();
     return (
-        <Box sx={{ flex: 1, overflowY: 'auto', fontFamily: TOKENS.fontFamily }}>
+        <Box
+            role="listbox"
+            aria-label="Captured events"
+            sx={{ flex: 1, overflowY: 'auto', fontFamily: theme.typography.fontFamily, minHeight: 0 }}
+        >
             {events.length === 0 ? (
-                <Box sx={{ p: 2, color: '#546e7a', fontSize: 13, fontFamily: TOKENS.fontFamily }}>
-                    No events captured.
-                </Box>
+                <EmptyState
+                    title="No events captured"
+                    description="Start interacting with the application to inspect activity."
+                />
             ) : (
-                [...events].reverse().map((entry) => (
-                    <EventItem key={entry.sequence} entry={entry} />
-                ))
+                [...events]
+                    .reverse()
+                    .map((entry) => (
+                        <EventItem
+                            key={entry.sequence}
+                            entry={entry}
+                            selected={entry.sequence === selectedSequence}
+                            onSelect={onSelect}
+                        />
+                    ))
             )}
         </Box>
     );

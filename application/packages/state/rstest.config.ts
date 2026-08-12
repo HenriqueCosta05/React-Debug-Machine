@@ -2,6 +2,7 @@ import { defineConfig } from '@rstest/core';
 
 export default defineConfig({
     testEnvironment: 'jsdom',
+    setupFiles: ['./setupTests.js'],
     coverage: {
         provider: 'v8',
         reporters: ['text', 'lcov'],

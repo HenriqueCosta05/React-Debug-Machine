@@ -4,3 +4,5 @@ dist
 coverage
 .rsbuild
 .playwright-mcp
+.tarballs
+local-packages
